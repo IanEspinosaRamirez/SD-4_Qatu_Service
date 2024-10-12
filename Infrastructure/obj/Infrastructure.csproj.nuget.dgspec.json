@@ -1,0 +1,193 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/finnisimo/Desktop/School/qatu-service/Infrastructure/Infrastructure.csproj": {}
+  },
+  "projects": {
+    "/home/finnisimo/Desktop/School/qatu-service/Application/Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/finnisimo/Desktop/School/qatu-service/Application/Application.csproj",
+        "projectName": "Application",
+        "projectPath": "/home/finnisimo/Desktop/School/qatu-service/Application/Application.csproj",
+        "packagesPath": "/home/finnisimo/.nuget/packages/",
+        "outputPath": "/home/finnisimo/Desktop/School/qatu-service/Application/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/finnisimo/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/home/finnisimo/Desktop/School/qatu-service/Domain/Domain.csproj": {
+                "projectPath": "/home/finnisimo/Desktop/School/qatu-service/Domain/Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/opt/dotnet/sdk/8.0.402/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/finnisimo/Desktop/School/qatu-service/Domain/Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/finnisimo/Desktop/School/qatu-service/Domain/Domain.csproj",
+        "projectName": "Domain",
+        "projectPath": "/home/finnisimo/Desktop/School/qatu-service/Domain/Domain.csproj",
+        "packagesPath": "/home/finnisimo/.nuget/packages/",
+        "outputPath": "/home/finnisimo/Desktop/School/qatu-service/Domain/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/finnisimo/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/opt/dotnet/sdk/8.0.402/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/home/finnisimo/Desktop/School/qatu-service/Infrastructure/Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/finnisimo/Desktop/School/qatu-service/Infrastructure/Infrastructure.csproj",
+        "projectName": "Infrastructure",
+        "projectPath": "/home/finnisimo/Desktop/School/qatu-service/Infrastructure/Infrastructure.csproj",
+        "packagesPath": "/home/finnisimo/.nuget/packages/",
+        "outputPath": "/home/finnisimo/Desktop/School/qatu-service/Infrastructure/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/finnisimo/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/home/finnisimo/Desktop/School/qatu-service/Application/Application.csproj": {
+                "projectPath": "/home/finnisimo/Desktop/School/qatu-service/Application/Application.csproj"
+              },
+              "/home/finnisimo/Desktop/School/qatu-service/Domain/Domain.csproj": {
+                "projectPath": "/home/finnisimo/Desktop/School/qatu-service/Domain/Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/opt/dotnet/sdk/8.0.402/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
