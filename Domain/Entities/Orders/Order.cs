@@ -5,6 +5,19 @@ using Domain.Entities.OrderDetails;
 namespace Domain.Entities.Orders;
 
 public class Order : AggregateRoot {
+  public Order(CustomerId id, float totalPrice, string shippingMethod,
+               string paymentMethod, DateTime orderDate, CustomerId userId,
+               User user, ICollection<OrderDetail> orderDetails) {
+    Id = id;
+    TotalPrice = totalPrice;
+    ShippingMethod = shippingMethod;
+    PaymentMethod = paymentMethod;
+    OrderDate = orderDate;
+    UserId = userId;
+    User = user;
+    OrderDetails = orderDetails;
+  }
+
   public CustomerId Id { get; set; }
 
   public float TotalPrice { get; set; }
