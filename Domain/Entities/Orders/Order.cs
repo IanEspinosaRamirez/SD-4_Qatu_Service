@@ -6,35 +6,28 @@ namespace Domain.Entities.Orders;
 
 public class Order : AggregateRoot {
   public Order(CustomerId id, float totalPrice, string shippingMethod,
-               string paymentMethod, DateTime orderDate, CustomerId userId,
-               User user, ICollection<OrderDetail> orderDetails) {
+               string paymentMethod, DateTime orderDate, CustomerId userId) {
     Id = id;
     TotalPrice = totalPrice;
     ShippingMethod = shippingMethod;
     PaymentMethod = paymentMethod;
     OrderDate = orderDate;
     UserId = userId;
-    User = user;
-    OrderDetails = orderDetails;
   }
 
   public CustomerId Id { get; set; }
-
   public float TotalPrice { get; set; }
-
-  public String ShippingMethod { get; set; }
-
-  public String PaymentMethod { get; set; }
-
+  public string ShippingMethod { get; set; }
+  public string PaymentMethod { get; set; }
   public DateTime OrderDate { get; set; }
 
-  // Foreign Key for User (1 Order -> 1 User)
+  // Clave foránea
   public CustomerId UserId { get; set; }
 
-  // Navigation property for User
-  public User User { get; set; }
+  // Propiedad de navegación
+  public User? User { get; set; }
 
-  // Relationship with OrderDetail (1 Order -> Many OrderDetails)
+  // Relaciones
   public ICollection<OrderDetail> OrderDetails {
     get; set;
   } = new List<OrderDetail>();

@@ -1,43 +1,37 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Domain.Entities.ReviewProducts;
-using Domain.Entities.Users;
-using Domain.Entities.Products;
+using Domain.Entities;
 
 namespace Infrastructure.Persistence.Configuration;
 
 public class ReviewProductConfiguration
     : IEntityTypeConfiguration<ReviewProduct> {
   public void Configure(EntityTypeBuilder<ReviewProduct> builder) {
-    // Table configuration
+    // Configuración de la tabla
     builder.ToTable("ReviewProducts");
 
-    // Primary key configuration
+    // Clave primaria
     builder.HasKey(rp => rp.Id);
+    builder.Property(rp => rp.Id)
+        .HasConversion(id => id.Value, value => new CustomerId(value));
 
-    // Required properties and length restrictions
     builder.Property(rp => rp.Rating).IsRequired();
-
-    builder.Property(rp => rp.Content).IsRequired().HasMaxLength(1000);
-
+    builder.Property(rp => rp.Content).IsRequired().HasMaxLength(500);
     builder.Property(rp => rp.CreatedAt).IsRequired();
 
-    // Relationship configurations
+    // Relaciones
 
-    // Foreign key for User (ReviewProduct -> User)
-    builder
-        .HasOne<User>() // No need to reference the User property
+    // Relación con User
+    builder.HasOne(rp => rp.User)
         .WithMany(u => u.ReviewProducts)
         .HasForeignKey(rp => rp.UserId)
-        .OnDelete(DeleteBehavior.Cascade); // When a User is deleted, related
-                                           // reviews are deleted as well
+        .OnDelete(DeleteBehavior.Cascade);
 
-    // Foreign key for Product (ReviewProduct -> Product)
-    builder
-        .HasOne<Product>() // No need to reference the Product property
+    // Relación con Product
+    builder.HasOne(rp => rp.Product)
         .WithMany(p => p.ReviewProducts)
         .HasForeignKey(rp => rp.ProductId)
-        .OnDelete(DeleteBehavior.Cascade); // When a Product is deleted, related
-                                           // reviews are deleted as well
+        .OnDelete(DeleteBehavior.Cascade);
   }
 }

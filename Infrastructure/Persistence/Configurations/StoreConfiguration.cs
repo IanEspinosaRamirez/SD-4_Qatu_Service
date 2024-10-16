@@ -1,58 +1,57 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Domain.Entities.Stores;
-using Domain.Entities.Users;
+using Domain.Entities;
 
 namespace Infrastructure.Persistence.Configuration;
 
 public class StoreConfiguration : IEntityTypeConfiguration<Store> {
   public void Configure(EntityTypeBuilder<Store> builder) {
-    // Table configuration
+    // Configuración de la tabla
     builder.ToTable("Stores");
 
-    // Primary key configuration
+    // Clave primaria
     builder.HasKey(s => s.Id);
+    builder.Property(s => s.Id).HasConversion(id => id.Value,
+                                              value => new CustomerId(value));
 
-    // Required properties and length restrictions
+    // Propiedades requeridas y restricciones de longitud
     builder.Property(s => s.Name).IsRequired().HasMaxLength(100);
     builder.Property(s => s.Description).HasMaxLength(500);
     builder.Property(s => s.Address).HasMaxLength(200);
     builder.Property(s => s.CreatedAt).IsRequired();
     builder.Property(s => s.UpdatedAt).IsRequired();
 
-    // Relationship configurations
+    // Relaciones
 
-    // One-to-many relationship with ReviewStore (optional)
+    // Relación con User
+    builder.HasOne(s => s.User)
+        .WithMany(u => u.Stores)
+        .HasForeignKey(s => s.UserId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+    // Relación uno a muchos con ReviewStore
     builder.HasMany(s => s.ReviewStores)
-        .WithOne() // No need to reference the Store navigation property
+        .WithOne(rs => rs.Store)
         .HasForeignKey(rs => rs.StoreId)
         .OnDelete(DeleteBehavior.Cascade);
 
-    // Required foreign key for User (use only UserId)
-    builder
-        .HasOne<User>() // No need to reference the User navigation property
-        .WithMany(u => u.Stores)
-        .HasForeignKey(s => s.UserId)
-        .OnDelete(
-            DeleteBehavior.Cascade); // Deletes the store if the user is deleted
-
-    // One-to-many relationship with Product
+    // Relación uno a muchos con Product
     builder.HasMany(s => s.Products)
-        .WithOne() // No need to reference the Store navigation property
+        .WithOne(p => p.Store)
         .HasForeignKey(p => p.StoreId)
         .OnDelete(DeleteBehavior.Cascade);
 
-    // One-to-many relationship with Photo (required)
+    // Relación uno a muchos con Photo
     builder.HasMany(s => s.Photos)
-        .WithOne() // No need to reference the Store navigation property
+        .WithOne(p => p.Store)
         .HasForeignKey(p => p.StoreId)
         .OnDelete(DeleteBehavior.Cascade);
 
-    // Optional relationship with Coupon
+    // Relación uno a muchos con Coupon
     builder.HasMany(s => s.Coupons)
-        .WithOne() // No need to reference the Store navigation property
+        .WithOne(c => c.Store)
         .HasForeignKey(c => c.StoreId)
-        .OnDelete(DeleteBehavior
-                      .SetNull); // Set StoreId to null when store is deleted
+        .OnDelete(DeleteBehavior.SetNull);
   }
 }

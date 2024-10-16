@@ -1,35 +1,34 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Domain.Entities.Categories;
+using Domain.Entities;
 
 namespace Infrastructure.Persistence.Configuration;
 
 public class CategoryConfiguration : IEntityTypeConfiguration<Category> {
   public void Configure(EntityTypeBuilder<Category> builder) {
-    // Table configuration
+    // Configuración de la tabla
     builder.ToTable("Categories");
 
-    // Primary key configuration
+    // Clave primaria
     builder.HasKey(c => c.Id);
+    builder.Property(c => c.Id).HasConversion(id => id.Value,
+                                              value => new CustomerId(value));
 
-    // Required properties
     builder.Property(c => c.Name).IsRequired().HasMaxLength(100);
 
-    // Relationship configurations
+    // Relaciones
 
-    // One-to-many relationship with Products
+    // Relación uno a muchos con Product
     builder.HasMany(c => c.Products)
-        .WithOne() // No need to reference the Product navigation property
+        .WithOne(p => p.Category)
         .HasForeignKey(p => p.CategoryId)
-        .OnDelete(DeleteBehavior.Cascade); // When a category is deleted,
-                                           // related products are deleted
+        .OnDelete(DeleteBehavior.SetNull);
 
-    // One-to-many relationship with Coupons
+    // Relación uno a muchos con Coupon
     builder.HasMany(c => c.Coupons)
-        .WithOne() // No need to reference the Coupon navigation property
+        .WithOne(coupon => coupon.Category)
         .HasForeignKey(coupon => coupon.CategoryId)
-        .OnDelete(
-            DeleteBehavior
-                .SetNull); // Setting foreign key to null if category is deleted
+        .OnDelete(DeleteBehavior.SetNull);
   }
 }

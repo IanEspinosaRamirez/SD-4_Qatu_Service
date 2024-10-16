@@ -1,39 +1,34 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Domain.Entities.Photos;
-using Domain.Entities.Products;
-using Domain.Entities.Stores;
+using Domain.Entities;
 
 namespace Infrastructure.Persistence.Configuration;
 
 public class PhotoConfiguration : IEntityTypeConfiguration<Photo> {
   public void Configure(EntityTypeBuilder<Photo> builder) {
-    // Table configuration
+    // Configuración de la tabla
     builder.ToTable("Photos");
 
-    // Primary key configuration
+    // Clave primaria
     builder.HasKey(p => p.Id);
+    builder.Property(p => p.Id).HasConversion(id => id.Value,
+                                              value => new CustomerId(value));
 
-    // Required properties and length restrictions
-    builder.Property(p => p.ImageURL).IsRequired().HasMaxLength(500);
+    builder.Property(p => p.ImageURL).IsRequired().HasMaxLength(200);
 
-    // Optional Foreign Key for Product
-    builder
-        .HasOne<Product>() // No need to reference the Product navigation
-                           // property
-        .WithMany(pr => pr.Photos)
+    // Relaciones
+
+    // Relación opcional con Product
+    builder.HasOne(p => p.Product)
+        .WithMany(p => p.Photos)
         .HasForeignKey(p => p.ProductId)
-        .OnDelete(
-            DeleteBehavior
-                .SetNull); // Set the foreign key to null if Product is deleted
+        .OnDelete(DeleteBehavior.Cascade);
 
-    // Optional Foreign Key for Store
-    builder
-        .HasOne<Store>() // No need to reference the Store navigation property
+    // Relación opcional con Store
+    builder.HasOne(p => p.Store)
         .WithMany(s => s.Photos)
         .HasForeignKey(p => p.StoreId)
-        .OnDelete(
-            DeleteBehavior
-                .SetNull); // Set the foreign key to null if Store is deleted
+        .OnDelete(DeleteBehavior.Cascade);
   }
 }

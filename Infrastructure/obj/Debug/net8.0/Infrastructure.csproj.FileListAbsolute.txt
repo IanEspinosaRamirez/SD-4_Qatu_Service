@@ -33,3 +33,5 @@
 /home/finnisimo/Desktop/School/qatu-service/Infrastructure/obj/Debug/net8.0/refint/Infrastructure.dll
 /home/finnisimo/Desktop/School/qatu-service/Infrastructure/obj/Debug/net8.0/Infrastructure.pdb
 /home/finnisimo/Desktop/School/qatu-service/Infrastructure/obj/Debug/net8.0/ref/Infrastructure.dll
+/home/finnisimo/Desktop/School/qatu-service/Infrastructure/bin/Debug/net8.0/Infrastructure.runtimeconfig.json
+/home/finnisimo/Desktop/School/qatu-service/Infrastructure/obj/Debug/net8.0/Infrastructure.genruntimeconfig.cache

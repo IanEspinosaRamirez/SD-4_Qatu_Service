@@ -4,6 +4,8 @@ using Domain.Entities.Photos;
 using Domain.Primitives;
 using Domain.Entities.Coupons;
 using Domain.Entities.Products.Enums;
+using Domain.Entities.Stores;
+using Domain.Entities.Categories;
 
 namespace Domain.Entities.Products;
 
@@ -22,49 +24,33 @@ public class Product : AggregateRoot {
     Status = StatusProduct.ACTIVE;
     StoreId = storeId;
     CategoryId = categoryId;
-    ReviewProducts = new List<ReviewProduct>(); // Initialize as empty list
-    OrderDetails = new List<OrderDetail>();     // Initialize as empty list
-    Photos = new List<Photo>();                 // Initialize as empty list
-    Coupons = new List<Coupon>();               // Initialize as empty list
+    ReviewProducts = new List<ReviewProduct>();
+    OrderDetails = new List<OrderDetail>();
+    Photos = new List<Photo>();
+    Coupons = new List<Coupon>();
   }
 
   public CustomerId Id { get; set; }
-
   public string Name { get; set; }
-
   public float Price { get; set; }
-
   public string Description { get; set; }
-
   public int Stock { get; set; }
-
   public string Brand { get; set; }
-
   public DateTime CreatedAt { get; set; }
-
   public DateTime UpdatedAt { get; set; }
-
   public StatusProduct Status { get; set; }
 
-  // Foreign Key for Store (1 Product -> 1 Store)
+  // Claves foráneas
   public CustomerId StoreId { get; set; }
-
-  // Foreign Key for Category (1 Product -> 1 Category)
   public CustomerId CategoryId { get; set; }
 
-  // Relationship with ReviewProduct (1 Product -> Many ReviewProducts)
-  public ICollection<ReviewProduct> ReviewProducts {
-    get; set;
-  } = new List<ReviewProduct>();
+  // Propiedades de navegación
+  public Store Store { get; set; }
+  public Category Category { get; set; }
 
-  // Relationship with OrderDetail (1 Product -> Many OrderDetails)
-  public ICollection<OrderDetail> OrderDetails {
-    get; set;
-  } = new List<OrderDetail>();
-
-  // Relationship with Photo (1 Product -> Many Photos)
-  public ICollection<Photo> Photos { get; set; } = new List<Photo>();
-
-  // Relationship with Coupon (1 Product -> Many Coupons)
-  public ICollection<Coupon> Coupons { get; set; } = new List<Coupon>();
+  // Relaciones
+  public ICollection<ReviewProduct> ReviewProducts { get; set; }
+  public ICollection<OrderDetail> OrderDetails { get; set; }
+  public ICollection<Photo> Photos { get; set; }
+  public ICollection<Coupon> Coupons { get; set; }
 }
