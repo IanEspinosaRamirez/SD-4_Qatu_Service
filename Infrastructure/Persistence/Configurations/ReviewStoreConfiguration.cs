@@ -1,42 +1,36 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Domain.Entities.ReviewStores;
-using Domain.Entities.Users;
-using Domain.Entities.Stores;
+using Domain.Entities;
 
 namespace Infrastructure.Persistence.Configuration;
 
 public class ReviewStoreConfiguration : IEntityTypeConfiguration<ReviewStore> {
   public void Configure(EntityTypeBuilder<ReviewStore> builder) {
-    // Table configuration
+    // Configuración de la tabla
     builder.ToTable("ReviewStores");
 
-    // Primary key configuration
+    // Clave primaria
     builder.HasKey(rs => rs.Id);
+    builder.Property(rs => rs.Id)
+        .HasConversion(id => id.Value, value => new CustomerId(value));
 
-    // Required properties and length restrictions
     builder.Property(rs => rs.Rating).IsRequired();
-
-    builder.Property(rs => rs.Content).IsRequired().HasMaxLength(1000);
-
+    builder.Property(rs => rs.Content).IsRequired().HasMaxLength(500);
     builder.Property(rs => rs.CreatedAt).IsRequired();
 
-    // Relationship configurations
+    // Relaciones
 
-    // Foreign key for User (ReviewStore -> User)
-    builder
-        .HasOne<User>() // No need to reference the User property
+    // Relación con User
+    builder.HasOne(rs => rs.User)
         .WithMany(u => u.ReviewStores)
         .HasForeignKey(rs => rs.UserId)
-        .OnDelete(DeleteBehavior.Cascade); // When a User is deleted, the
-                                           // reviews are deleted as well
+        .OnDelete(DeleteBehavior.Cascade);
 
-    // Foreign key for Store (ReviewStore -> Store)
-    builder
-        .HasOne<Store>() // No need to reference the Store property
+    // Relación con Store
+    builder.HasOne(rs => rs.Store)
         .WithMany(s => s.ReviewStores)
         .HasForeignKey(rs => rs.StoreId)
-        .OnDelete(DeleteBehavior.Cascade); // When a Store is deleted, the
-                                           // reviews are deleted as well
+        .OnDelete(DeleteBehavior.Cascade);
   }
 }

@@ -1,3 +1,5 @@
+using Domain.Entities.Users;
+using Domain.Entities.Stores;
 using Domain.Primitives;
 
 namespace Domain.Entities.ReviewStores;
@@ -9,21 +11,20 @@ public class ReviewStore : AggregateRoot {
     Rating = rating;
     Content = content;
     CreatedAt = DateTime.Now;
-    UserId = userId;   // Only the UserId is passed
-    StoreId = storeId; // Only the StoreId is passed
+    UserId = userId;
+    StoreId = storeId;
   }
 
   public CustomerId Id { get; set; }
-
   public int Rating { get; set; }
-
-  public String Content { get; set; }
-
+  public string Content { get; set; }
   public DateTime CreatedAt { get; set; }
 
-  // Foreign Key for the User relationship
+  // Claves foráneas
   public CustomerId UserId { get; set; }
-
-  // Foreign Key for the Store relationship
   public CustomerId StoreId { get; set; }
+
+  // Propiedades de navegación
+  public User? User { get; set; }
+  public Store? Store { get; set; }
 }

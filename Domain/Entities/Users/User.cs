@@ -16,7 +16,7 @@ public class User : AggregateRoot {
     Id = id;
     FullName = fullName;
     Email = email;
-    Phone = phone; // This can be null
+    Phone = phone;
     Username = username;
     Password = password;
     Country = country;
@@ -25,59 +25,34 @@ public class User : AggregateRoot {
     ActiveAccount = true;
     VerifiedAccount = verifiedAccount;
     Address = address;
-    ImageURL = imageURL; // This can be null
+    ImageURL = imageURL;
     RoleUser = UserRole.Client;
-    ReviewStores = new List<ReviewStore>();     // Initialize as an empty list
-    ReviewProducts = new List<ReviewProduct>(); // Initialize as an empty list
-    Stores = new List<Store>();                 // Initialize as an empty list
-    Cart = null;                                // Can be null
-    Orders = new List<Order>();                 // Initialize as an empty list
+    ReviewStores = new List<ReviewStore>();
+    ReviewProducts = new List<ReviewProduct>();
+    Stores = new List<Store>();
+    Cart = null;
+    Orders = new List<Order>();
   }
 
   public CustomerId Id { get; set; }
-
-  public String FullName { get; set; }
-
-  public String Email { get; set; }
-
-  public String? Phone { get; set; } // Nullable
-
-  public String Username { get; set; }
-
-  public String Password { get; set; }
-
-  public String Country { get; set; }
-
+  public string FullName { get; set; }
+  public string Email { get; set; }
+  public string? Phone { get; set; } // Nullable
+  public string Username { get; set; }
+  public string Password { get; set; }
+  public string Country { get; set; }
   public DateTime CreatedAt { get; set; }
-
   public DateTime UpdatedAt { get; set; }
-
-  public Boolean ActiveAccount { get; set; }
-
-  public Boolean VerifiedAccount { get; set; }
-
-  public String Address { get; set; }
-
-  public String? ImageURL { get; set; } // Nullable
-
+  public bool ActiveAccount { get; set; }
+  public bool VerifiedAccount { get; set; }
+  public string Address { get; set; }
+  public string? ImageURL { get; set; } // Nullable
   public UserRole RoleUser { get; set; }
 
-  // Relationship with ReviewStore (1 User -> Many ReviewStores)
-  public ICollection<ReviewStore> ReviewStores {
-    get; set;
-  } // Initialized to an empty list
-
-  // Relationship with ReviewProduct (1 User -> Many ReviewProducts)
-  public ICollection<ReviewProduct> ReviewProducts {
-    get; set;
-  } // Initialized to an empty list
-
-  // Relationship with Store (1 User -> Many Stores)
-  public ICollection<Store> Stores { get; set; } // Initialized to an empty list
-
-  // One-to-one relationship with Cart (1 User -> 1 Cart)
-  public Cart? Cart { get; set; } // Can be null
-
-  // Relationship with Order (1 User -> Many Orders)
-  public ICollection<Order> Orders { get; set; } // Initialized to an empty list
+  // Relaciones
+  public ICollection<ReviewStore> ReviewStores { get; set; }
+  public ICollection<ReviewProduct> ReviewProducts { get; set; }
+  public ICollection<Store> Stores { get; set; }
+  public Cart? Cart { get; set; } // Puede ser null
+  public ICollection<Order> Orders { get; set; }
 }

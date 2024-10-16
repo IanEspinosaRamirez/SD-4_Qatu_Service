@@ -1,36 +1,32 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Domain.Entities.Carts;
-using Domain.Entities.Users;
+using Domain.Entities;
 
 namespace Infrastructure.Persistence.Configuration;
 
 public class CartConfiguration : IEntityTypeConfiguration<Cart> {
   public void Configure(EntityTypeBuilder<Cart> builder) {
-    // Table configuration
+    // Configuración de la tabla
     builder.ToTable("Carts");
 
-    // Primary key configuration
+    // Clave primaria
     builder.HasKey(c => c.Id);
+    builder.Property(c => c.Id).HasConversion(id => id.Value,
+                                              value => new CustomerId(value));
 
-    // Required properties
-    builder.Property(c => c.UserId).IsRequired();
+    // Relaciones
 
-    // Relationship configurations
-
-    // Foreign key for User (1 Cart -> 1 User)
-    builder
-        .HasOne<User>() // No need to reference the User navigation property
-        .WithOne()
+    // Relación con User
+    builder.HasOne(c => c.User)
+        .WithOne(u => u.Cart)
         .HasForeignKey<Cart>(c => c.UserId)
-        .OnDelete(DeleteBehavior.Cascade); // When a user is deleted, the
-                                           // related cart is also deleted
+        .OnDelete(DeleteBehavior.Cascade);
 
-    // One-to-many relationship with CartItems (Cart -> CartItems)
+    // Relación uno a muchos con CartItem
     builder.HasMany(c => c.CartItems)
-        .WithOne() // No need to reference the Cart navigation property
+        .WithOne(ci => ci.Cart)
         .HasForeignKey(ci => ci.CartId)
-        .OnDelete(DeleteBehavior.Cascade); // When a cart is deleted, related
-                                           // cart items are also deleted
+        .OnDelete(DeleteBehavior.Cascade);
   }
 }

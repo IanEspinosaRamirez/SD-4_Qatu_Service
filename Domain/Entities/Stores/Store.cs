@@ -3,53 +3,40 @@ using Domain.Entities.ReviewStores;
 using Domain.Entities.Photos;
 using Domain.Primitives;
 using Domain.Entities.Coupons;
+using Domain.Entities.Users;
 
 namespace Domain.Entities.Stores;
 
 public class Store : AggregateRoot {
   public Store(CustomerId id, string name, string description, string address,
-               DateTime createdAt, DateTime updatedAt,
-               ICollection<Photo> photos, CustomerId userId,
-               ICollection<Product> products,
-               ICollection<ReviewStore>? reviewStores = null,
-               ICollection<Coupon>? coupons = null) {
+               DateTime createdAt, DateTime updatedAt, CustomerId userId) {
     Id = id;
     Name = name;
     Description = description;
     Address = address;
     CreatedAt = createdAt;
     UpdatedAt = updatedAt;
-    Photos = photos; // Required
-    UserId = userId; // Only UserId is required, not the full User object
-    Products = products;
-    ReviewStores = reviewStores ?? new List<ReviewStore>(); // Optional
-    Coupons = coupons ?? new List<Coupon>();                // Optional
+    UserId = userId;
   }
 
   public CustomerId Id { get; set; }
-
-  public String Name { get; set; }
-
-  public String Description { get; set; }
-
-  public String Address { get; set; }
-
+  public string Name { get; set; }
+  public string Description { get; set; }
+  public string Address { get; set; }
   public DateTime CreatedAt { get; set; }
-
   public DateTime UpdatedAt { get; set; }
 
-  // Required relationship with Photo (1 Store -> Many Photos)
-  public ICollection<Photo> Photos { get; set; } = new List<Photo>();
-
-  // Relationship with ReviewStore (1 Store -> Many ReviewStores) - Optional
-  public ICollection<ReviewStore>? ReviewStores { get; set; }
-
-  // Foreign Key for User (required)
+  // Clave foránea explícita
   public CustomerId UserId { get; set; }
 
-  // Relationship with Product (1 Store -> Many Products)
-  public ICollection<Product> Products { get; set; } = new List<Product>();
+  // Relación de navegación
+  public User? User { get; set; }
 
-  // Optional relationship with Coupon (1 Store -> Many Coupons)
-  public ICollection<Coupon>? Coupons { get; set; }
+  // Otras relaciones
+  public ICollection<Photo> Photos { get; set; } = new List<Photo>();
+  public ICollection<ReviewStore> ReviewStores {
+    get; set;
+  } = new List<ReviewStore>();
+  public ICollection<Product> Products { get; set; } = new List<Product>();
+  public ICollection<Coupon> Coupons { get; set; } = new List<Coupon>();
 }

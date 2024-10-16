@@ -1,9 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "w5nDXQ+TWsU=",
+  "dgSpecHash": "1xthGHP0guY=",
   "success": true,
   "projectFilePath": "/home/finnisimo/Desktop/School/qatu-service/Application/Application.csproj",
   "expectedPackageFiles": [
+    "/home/finnisimo/.nuget/packages/fluentvalidation/11.10.0/fluentvalidation.11.10.0.nupkg.sha512",
+    "/home/finnisimo/.nuget/packages/fluentvalidation.aspnetcore/11.3.0/fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
+    "/home/finnisimo/.nuget/packages/fluentvalidation.dependencyinjectionextensions/11.5.1/fluentvalidation.dependencyinjectionextensions.11.5.1.nupkg.sha512",
     "/home/finnisimo/.nuget/packages/mediatr/12.4.1/mediatr.12.4.1.nupkg.sha512",
     "/home/finnisimo/.nuget/packages/mediatr.contracts/2.0.1/mediatr.contracts.2.0.1.nupkg.sha512",
     "/home/finnisimo/.nuget/packages/microsoft.entityframeworkcore/8.0.10/microsoft.entityframeworkcore.8.0.10.nupkg.sha512",

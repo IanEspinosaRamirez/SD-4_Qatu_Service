@@ -1,49 +1,43 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Domain.Entities.Coupons;
+using Domain.Entities;
 
 namespace Infrastructure.Persistence.Configuration;
 
 public class CouponConfiguration : IEntityTypeConfiguration<Coupon> {
   public void Configure(EntityTypeBuilder<Coupon> builder) {
-    // Table configuration
+    // Configuración de la tabla
     builder.ToTable("Coupons");
 
-    // Primary key configuration
+    // Clave primaria
     builder.HasKey(c => c.Id);
+    builder.Property(c => c.Id).HasConversion(id => id.Value,
+                                              value => new CustomerId(value));
 
-    // Required properties
     builder.Property(c => c.DiscountPercentage).IsRequired();
-
     builder.Property(c => c.ExpirationDate).IsRequired();
-
     builder.Property(c => c.IsActive).IsRequired();
+    builder.Property(c => c.TypeCoupon).IsRequired().HasConversion<string>();
 
-    builder.Property(c => c.TypeCoupon)
-        .IsRequired()
-        .HasConversion<string>(); // Convert enum to string for storage
+    // Relaciones
 
-    // Optional foreign key for Product
+    // Relación opcional con Product
     builder.HasOne(c => c.Product)
         .WithMany(p => p.Coupons)
         .HasForeignKey(c => c.ProductId)
-        .OnDelete(
-            DeleteBehavior
-                .SetNull); // Set foreign key to null if product is deleted
+        .OnDelete(DeleteBehavior.SetNull);
 
-    // Optional foreign key for Category
+    // Relación opcional con Category
     builder.HasOne(c => c.Category)
         .WithMany(cat => cat.Coupons)
         .HasForeignKey(c => c.CategoryId)
-        .OnDelete(
-            DeleteBehavior
-                .SetNull); // Set foreign key to null if category is deleted
+        .OnDelete(DeleteBehavior.SetNull);
 
-    // Optional foreign key for Store
+    // Relación opcional con Store
     builder.HasOne(c => c.Store)
         .WithMany(s => s.Coupons)
         .HasForeignKey(c => c.StoreId)
-        .OnDelete(DeleteBehavior
-                      .SetNull); // Set foreign key to null if store is deleted
+        .OnDelete(DeleteBehavior.SetNull);
   }
 }

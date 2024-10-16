@@ -1,29 +1,28 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Domain.Entities.CartItems;
-using Domain.Entities.Carts;
+using Domain.Entities;
 
 namespace Infrastructure.Persistence.Configuration;
 
 public class CartItemConfiguration : IEntityTypeConfiguration<CartItem> {
   public void Configure(EntityTypeBuilder<CartItem> builder) {
-    // Table configuration
+    // Configuración de la tabla
     builder.ToTable("CartItems");
 
-    // Primary key configuration
+    // Clave primaria
     builder.HasKey(ci => ci.Id);
+    builder.Property(ci => ci.Id)
+        .HasConversion(id => id.Value, value => new CustomerId(value));
 
-    // Required properties
     builder.Property(ci => ci.Quantity).IsRequired();
 
-    // Relationship configurations
+    // Relaciones
 
-    // Foreign key for Cart (CartItem -> Cart)
-    builder
-        .HasOne<Cart>() // No need to reference the Cart navigation property
+    // Relación con Cart
+    builder.HasOne(ci => ci.Cart)
         .WithMany(c => c.CartItems)
         .HasForeignKey(ci => ci.CartId)
-        .OnDelete(DeleteBehavior.Cascade); // When a cart is deleted, related
-                                           // cart items are also deleted
+        .OnDelete(DeleteBehavior.Cascade);
   }
 }
