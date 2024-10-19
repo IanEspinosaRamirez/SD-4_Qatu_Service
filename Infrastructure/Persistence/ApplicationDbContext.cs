@@ -15,58 +15,122 @@ using Application.Data;
 using Domain.Primitives;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Domain.Entities;
 
-namespace Infrastructure.Persistence
+namespace Infrastructure.Persistence;
+
+public class ApplicationDbContext : DbContext,
+                                    IApplicationDbContext,
+                                    IUnitOfWork
 {
-    public class ApplicationDbContext : DbContext,
-                                        IApplicationDbContext,
-                                        IUnitOfWork
+    private readonly IPublisher _publisher;
+    private IDbContextTransaction? _currentTransaction;
+
+    public ApplicationDbContext(DbContextOptions options, IPublisher publisher)
+        : base(options)
     {
-        private readonly IPublisher _publisher;
+        _publisher =
+            publisher ?? throw new ArgumentNullException(nameof(publisher));
+    }
 
-        public ApplicationDbContext(DbContextOptions options, IPublisher publisher)
-            : base(options)
+    // Implementing the properties defined in IApplicationDbContext
+    public DbSet<User> Users { get; set; }
+    public DbSet<Store> Stores { get; set; }
+    public DbSet<ReviewStore> ReviewStores { get; set; }
+    public DbSet<ReviewProduct> ReviewProducts { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<Photo> Photos { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderDetail> OrderDetails { get; set; }
+    public DbSet<Coupon> Coupons { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Cart> Carts { get; set; }
+    public DbSet<CartItem> CartItems { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(
+            typeof(ApplicationDbContext).Assembly);
+    }
+
+    public override async Task<int> SaveChangesAsync(
+        CancellationToken cancellationToken = new CancellationToken())
+    {
+        var domainEvents = ChangeTracker.Entries<Domain.Primitives.AggregateRoot>()
+                               .Select(e => e.Entity)
+                               .Where(e => e.GetDomainEvents().Any())
+                               .SelectMany(e => e.GetDomainEvents());
+
+        var result = await base.SaveChangesAsync(cancellationToken);
+
+        foreach (var evt in domainEvents)
         {
-            _publisher =
-                publisher ?? throw new ArgumentNullException(nameof(publisher));
+            await _publisher.Publish(evt, cancellationToken);
         }
 
-        // Implementing the properties defined in IApplicationDbContext
-        public DbSet<User> Users { get; set; }
-        public DbSet<Store> Stores { get; set; }
-        public DbSet<ReviewStore> ReviewStores { get; set; }
-        public DbSet<ReviewProduct> ReviewProducts { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Photo> Photos { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderDetail> OrderDetails { get; set; }
-        public DbSet<Coupon> Coupons { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Cart> Carts { get; set; }
-        public DbSet<CartItem> CartItems { get; set; } // This was missing
+        return result;
+    }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+    // Implement missing methods from IUnitOfWork
+    public async Task BeginTransactionAsync()
+    {
+        if (_currentTransaction != null)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(
-                typeof(ApplicationDbContext).Assembly);
+            throw new InvalidOperationException(
+                "There is already an open transaction.");
         }
 
-        public override async Task<int> SaveChangesAsync(
-            CancellationToken cancellationToken = new CancellationToken())
+        _currentTransaction = await Database.BeginTransactionAsync();
+    }
+
+    public async Task CommitTransactionAsync()
+    {
+        if (_currentTransaction == null)
         {
-            var domainEvents = ChangeTracker.Entries<Domain.Primitives.AggregateRoot>()
-                                   .Select(e => e.Entity)
-                                   .Where(e => e.GetDomainEvents().Any())
-                                   .SelectMany(e => e.GetDomainEvents());
-
-            var result = await base.SaveChangesAsync(cancellationToken);
-
-            foreach (var evt in domainEvents)
-            {
-                await _publisher.Publish(evt, cancellationToken);
-            }
-
-            return result;
+            throw new InvalidOperationException("No transaction to commit.");
         }
+
+        try
+        {
+            await SaveChangesAsync();
+            await _currentTransaction.CommitAsync();
+        }
+        catch
+        {
+            await RollbackTransactionAsync();
+            throw;
+        }
+        finally
+        {
+            await DisposeTransactionAsync();
+        }
+    }
+
+    public async Task RollbackTransactionAsync()
+    {
+        if (_currentTransaction == null)
+        {
+            throw new InvalidOperationException("No transaction to rollback.");
+        }
+
+        await _currentTransaction.RollbackAsync();
+        await DisposeTransactionAsync();
+    }
+
+    private async Task DisposeTransactionAsync()
+    {
+        if (_currentTransaction != null)
+        {
+            await _currentTransaction.DisposeAsync();
+            _currentTransaction = null;
+        }
+    }
+
+    public IBaseRepository<T> BaseRepository<T>()
+        where T : AggregateRoot
+    {
+        // Implement the logic to return the appropriate repository
+        throw new NotImplementedException();
     }
 }
