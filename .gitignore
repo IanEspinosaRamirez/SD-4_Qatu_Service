@@ -614,3 +614,43 @@ FodyWeavers.xsd
 
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
+# Ignore bin and obj folders for all projects
+**/bin/
+**/obj/
+
+# Ignore NuGet-related files
+**/*.nuget.g.props
+**/*.nuget.dgspec.json
+**/project.assets.json
+**/project.nuget.cache
+
+# Ignore .dll and .pdb files (if you prefer to ignore them globally)
+**/*.dll
+**/*.pdb
+
+# Ignore generated MSBuild and editor config files
+**/*.AssemblyInfo.cs
+**/*.AssemblyInfoInputs.cache
+**/*.GeneratedMSBuildEditorConfig.editorconfig
+**/*.CoreCompileInputs.cache
+**/*.FileListAbsolute.txt
+**/*.assets.cache
+**/*.sourcelink.json
+**/*.genruntimeconfig.cache
+**/*.refint.dll
+**/*.ref.dll
+**/apphost
+
+# Ignore appsettings.json from specific folders
+**/bin/Debug/net8.0/appsettings.json
+
+# Ignore files for the Application, Domain, and Infrastructure projects specifically
+Application/bin/
+Application/obj/
+Domain/bin/
+Domain/obj/
+Infrastructure/bin/
+Infrastructure/obj/
+Web.Api/bin/
+Web.Api/obj/
+
