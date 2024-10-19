@@ -1,4 +1,5 @@
-using WebApi.Middleware;
+
+using Web.Api.Middlewares;
 
 namespace Web.Api;
 

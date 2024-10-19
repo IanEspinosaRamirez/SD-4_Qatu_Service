@@ -2,7 +2,8 @@ using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Middleware;
+namespace Web.Api.Middlewares;
+
 public class HandleErrors : IMiddleware
 {
     private readonly ILogger<HandleErrors> _logger;
