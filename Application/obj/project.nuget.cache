@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "1xthGHP0guY=",
+  "dgSpecHash": "boPUOSfNiRs=",
   "success": true,
   "projectFilePath": "/home/finnisimo/Desktop/School/qatu-service/Application/Application.csproj",
   "expectedPackageFiles": [
+    "/home/finnisimo/.nuget/packages/erroror/2.0.1/erroror.2.0.1.nupkg.sha512",
     "/home/finnisimo/.nuget/packages/fluentvalidation/11.10.0/fluentvalidation.11.10.0.nupkg.sha512",
     "/home/finnisimo/.nuget/packages/fluentvalidation.aspnetcore/11.3.0/fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
     "/home/finnisimo/.nuget/packages/fluentvalidation.dependencyinjectionextensions/11.5.1/fluentvalidation.dependencyinjectionextensions.11.5.1.nupkg.sha512",

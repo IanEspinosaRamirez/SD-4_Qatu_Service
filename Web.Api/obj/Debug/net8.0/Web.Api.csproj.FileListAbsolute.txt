@@ -160,3 +160,4 @@
 /home/finnisimo/Desktop/School/qatu-service/Web.Api/bin/Debug/net8.0/tr/Microsoft.CodeAnalysis.Workspaces.resources.dll
 /home/finnisimo/Desktop/School/qatu-service/Web.Api/bin/Debug/net8.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.resources.dll
 /home/finnisimo/Desktop/School/qatu-service/Web.Api/bin/Debug/net8.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/home/finnisimo/Desktop/School/qatu-service/Web.Api/bin/Debug/net8.0/ErrorOr.dll
