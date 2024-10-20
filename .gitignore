@@ -654,3 +654,7 @@ Infrastructure/obj/
 Web.Api/bin/
 Web.Api/obj/
 
+**/bin/
+**/obj/
+
+.vscode/
