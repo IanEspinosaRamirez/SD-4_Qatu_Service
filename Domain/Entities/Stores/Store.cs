@@ -9,6 +9,8 @@ namespace Domain.Entities.Stores;
 
 public class Store : AggregateRoot
 {
+    public Store() { }
+
     public Store(CustomerId id, string name, string description, string address,
                  DateTime createdAt, DateTime updatedAt, CustomerId userId)
     {

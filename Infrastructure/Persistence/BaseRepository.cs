@@ -13,18 +13,31 @@ public class BaseRepository<T> : IBaseRepository<T>
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    // Add an entity to the context
-    public Task Add(T entity) => Task.Run(() => _context.Set<T>().Add(entity));
+    public async Task Add(T entity)
+    {
+        if (entity == null)
+            throw new ArgumentNullException(nameof(entity));
+        await _context.Set<T>().AddAsync(entity);
+    }
 
-    // Update an existing entity in the context
-    public Task
-    Update(T entity) => Task.Run(() => _context.Set<T>().Update(entity));
+    public Task Update(T entity)
+    {
+        if (entity == null)
+            throw new ArgumentNullException(nameof(entity));
+        _context.Set<T>().Update(entity);
+        return Task.CompletedTask;
+    }
 
-    // Delete an entity from the context
-    public Task
-    Delete(T entity) => Task.Run(() => _context.Set<T>().Remove(entity));
+    public Task Delete(CustomerId id)
+    {
+        var entity = Activator.CreateInstance<T>();
+        entity.GetType().GetProperty("Id")?.SetValue(entity, id, null);
+        _context.Set<T>().Remove(entity);
+        return Task.CompletedTask;
+    }
 
-    // Get an entity by its ID
-    public async Task<T?>
-    GetById(CustomerId id) => await _context.Set<T>().FindAsync(id);
+    public async Task<T?> GetById(CustomerId id)
+    {
+        return await _context.Set<T>().FindAsync(id);
+    }
 }

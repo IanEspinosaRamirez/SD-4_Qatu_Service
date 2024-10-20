@@ -4,23 +4,27 @@ using Domain.Primitives;
 
 namespace Domain.Entities.Photos;
 
-public class Photo : AggregateRoot {
-  public Photo(CustomerId id, string imageURL, CustomerId? productId = null,
-               CustomerId? storeId = null) {
-    Id = id;
-    ImageURL = imageURL;
-    ProductId = productId;
-    StoreId = storeId;
-  }
+public class Photo : AggregateRoot
+{
+    public Photo() { }
 
-  public CustomerId Id { get; set; }
-  public string ImageURL { get; set; }
+    public Photo(CustomerId id, string imageURL, CustomerId? productId = null,
+                 CustomerId? storeId = null)
+    {
+        Id = id;
+        ImageURL = imageURL;
+        ProductId = productId;
+        StoreId = storeId;
+    }
 
-  // Claves foráneas opcionales
-  public CustomerId? ProductId { get; set; }
-  public CustomerId? StoreId { get; set; }
+    public CustomerId Id { get; set; }
+    public string ImageURL { get; set; }
 
-  // Propiedades de navegación
-  public Product? Product { get; set; }
-  public Store? Store { get; set; }
+    // Claves foráneas opcionales
+    public CustomerId? ProductId { get; set; }
+    public CustomerId? StoreId { get; set; }
+
+    // Propiedades de navegación
+    public Product? Product { get; set; }
+    public Store? Store { get; set; }
 }
