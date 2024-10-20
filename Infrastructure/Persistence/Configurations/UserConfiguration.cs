@@ -30,7 +30,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User> {
     builder.Property(u => u.Password).IsRequired();
     builder.Property(u => u.Country).IsRequired().HasMaxLength(50);
     builder.Property(u => u.CreatedAt).IsRequired();
-    builder.Property(u => u.UpdatedAt).IsRequired();
+    builder.Property(u => u.UpdatedAt);
     builder.Property(u => u.ActiveAccount).IsRequired();
     builder.Property(u => u.VerifiedAccount).IsRequired();
     builder.Property(u => u.Address).IsRequired().HasMaxLength(200);

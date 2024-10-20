@@ -11,6 +11,8 @@ namespace Domain.Entities.Products;
 
 public class Product : AggregateRoot
 {
+    public Product() { }
+
     public Product(CustomerId id, string name, float price, string description,
                    int stock, string brand, DateTime updatedAt,
                    CustomerId storeId, CustomerId categoryId)

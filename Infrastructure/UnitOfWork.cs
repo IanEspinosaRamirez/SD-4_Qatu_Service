@@ -1,103 +1,90 @@
-using Domain.Entities;
+using Domain.Entities.CartItems;
+using Domain.Entities.Carts;
+using Domain.Entities.Categories;
+using Domain.Entities.Coupons;
+using Domain.Entities.OrderDetails;
+using Domain.Entities.Orders;
+using Domain.Entities.Photos;
+using Domain.Entities.Products;
+using Domain.Entities.ReviewProducts;
+using Domain.Entities.ReviewStores;
+using Domain.Entities.Stores;
+using Domain.Entities.Users;
 using Domain.Primitives;
 using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore.Storage;
+using Infrastructure.Persistence.Repositories.Entities;
 
 namespace Infrastructure;
 
-public class UnitOfWork : IUnitOfWork
-{
-    private readonly ApplicationDbContext _context;
-    private readonly Dictionary<string, object> _repositories = new();
-    private IDbContextTransaction? _transaction;
+public class UnitOfWork : IUnitOfWork {
+  private readonly ApplicationDbContext _context;
+  private IUserRepository _userRepository;
+  private IStoreRepository _storeRepository;
+  private IReviewStoreRepository _reviewStoreRepository;
+  private IReviewProductRepository _reviewProductRepository;
+  private IProductRepository _productRepository;
+  private IPhotoRepository _photoRepository;
+  private IOrderRepository _orderRepository;
+  private IOrderDetailRepository _orderDetailRepository;
+  private ICouponRepository _couponRepository;
+  private ICategoryRepository _categoryRepository;
+  private ICartRepository _cartRepository;
+  private ICartItemRepository _cartItemRepository;
 
-    public UnitOfWork(ApplicationDbContext context)
-    {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
-    }
+  public UnitOfWork(ApplicationDbContext context) { _context = context; }
 
-    public IBaseRepository<T> BaseRepository<T>()
-        where T : AggregateRoot
-    {
-        var type = typeof(T).Name;
+  public IUserRepository UserRepository => _userRepository ??=
+      new UserRepository(_context);
 
-        if (!_repositories.TryGetValue(type, out var repository))
-        {
-            repository = new BaseRepository<T>(_context);
-            _repositories.Add(type, repository);
-        }
+  public IStoreRepository StoreRepository => _storeRepository ??=
+      new StoreRepository(_context);
 
-        return (IBaseRepository<T>)repository;
-    }
+  public IReviewStoreRepository ReviewStoreRepository =>
+      _reviewStoreRepository ??= new ReviewStoreRepository(_context);
 
-    public async Task BeginTransactionAsync()
-    {
-        if (_transaction != null)
-        {
-            throw new InvalidOperationException(
-                "There is already an open transaction.");
-        }
+  public IReviewProductRepository ReviewProductRepository =>
+      _reviewProductRepository ??= new ReviewProductRepository(_context);
 
-        _transaction = await _context.Database.BeginTransactionAsync();
-    }
+  public IProductRepository ProductRepository => _productRepository ??=
+      new ProductRepository(_context);
 
-    public async Task CommitTransactionAsync()
-    {
-        if (_transaction == null)
-        {
-            throw new InvalidOperationException("No transaction to commit.");
-        }
+  public IPhotoRepository PhotoRepository => _photoRepository ??=
+      new PhotoRepository(_context);
 
-        try
-        {
-            await _context.SaveChangesAsync();
-            await _transaction.CommitAsync();
-        }
-        catch
-        {
-            await RollbackTransactionAsync();
-            throw;
-        }
-        finally
-        {
-            await DisposeTransactionAsync();
-        }
-    }
+  public IOrderRepository OrderRepository => _orderRepository ??=
+      new OrderRepository(_context);
 
-    public async Task RollbackTransactionAsync()
-    {
-        if (_transaction == null)
-        {
-            throw new InvalidOperationException("No transaction to rollback.");
-        }
+  public IOrderDetailRepository OrderDetailRepository =>
+      _orderDetailRepository ??= new OrderDetailRepository(_context);
 
-        await _transaction.RollbackAsync();
-        await DisposeTransactionAsync();
-    }
+  public ICouponRepository CouponRepository => _couponRepository ??=
+      new CouponRepository(_context);
 
-    public async Task<int>
-    SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        return await _context.SaveChangesAsync(cancellationToken);
-    }
+  public ICategoryRepository CategoryRepository => _categoryRepository ??=
+      new CategoryRepository(_context);
 
-    public void Dispose()
-    {
-        _context.Dispose();
-        GC.SuppressFinalize(this);
-    }
+  public ICartRepository CartRepository => _cartRepository ??=
+      new CartRepository(_context);
 
-    private async Task DisposeTransactionAsync()
-    {
-        if (_transaction != null)
-        {
-            await _transaction.DisposeAsync();
-            _transaction = null;
-        }
-    }
+  public ICartItemRepository CartItemRepository => _cartItemRepository ??=
+      new CartItemRepository(_context);
 
-    IBaseRepository<T> IUnitOfWork.BaseRepository<T>()
-    {
-        throw new NotImplementedException();
-    }
+  public async Task BeginTransactionAsync() {
+    await _context.BeginTransactionAsync();
+  }
+
+  public async Task CommitTransactionAsync() {
+    await _context.CommitTransactionAsync();
+  }
+
+  public async Task RollbackTransactionAsync() {
+    await _context.RollbackTransactionAsync();
+  }
+
+  public async Task<int>
+  SaveChangesAsync(CancellationToken cancellationToken = default) {
+    return await _context.SaveChangesAsync(cancellationToken);
+  }
+
+  public void Dispose() { _context.Dispose(); }
 }

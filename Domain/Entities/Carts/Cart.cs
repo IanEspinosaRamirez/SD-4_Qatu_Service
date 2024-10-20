@@ -4,21 +4,25 @@ using Domain.Primitives;
 
 namespace Domain.Entities.Carts;
 
-public class Cart : AggregateRoot {
-  public Cart(CustomerId id, CustomerId userId) {
-    Id = id;
-    UserId = userId;
-    CartItems = new List<CartItem>();
-  }
+public class Cart : AggregateRoot
+{
+    public Cart() { }
 
-  public CustomerId Id { get; set; }
+    public Cart(CustomerId id, CustomerId userId)
+    {
+        Id = id;
+        UserId = userId;
+        CartItems = new List<CartItem>();
+    }
 
-  // Clave foránea
-  public CustomerId UserId { get; set; }
+    public CustomerId Id { get; set; }
 
-  // Propiedad de navegación
-  public User? User { get; set; }
+    // Clave foránea
+    public CustomerId UserId { get; set; }
 
-  // Relaciones
-  public ICollection<CartItem> CartItems { get; set; }
+    // Propiedad de navegación
+    public User? User { get; set; }
+
+    // Relaciones
+    public ICollection<CartItem> CartItems { get; set; }
 }

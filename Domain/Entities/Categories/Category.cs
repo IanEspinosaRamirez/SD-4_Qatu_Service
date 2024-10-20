@@ -4,18 +4,22 @@ using Domain.Primitives;
 
 namespace Domain.Entities.Categories;
 
-public class Category : AggregateRoot {
-  public Category(CustomerId id, string name) {
-    Id = id;
-    Name = name;
-    Products = new List<Product>();
-    Coupons = new List<Coupon>();
-  }
+public class Category : AggregateRoot
+{
+    public Category() { }
 
-  public CustomerId Id { get; set; }
-  public string Name { get; set; }
+    public Category(CustomerId id, string name)
+    {
+        Id = id;
+        Name = name;
+        Products = new List<Product>();
+        Coupons = new List<Coupon>();
+    }
 
-  // Relaciones
-  public ICollection<Product> Products { get; set; }
-  public ICollection<Coupon> Coupons { get; set; }
+    public CustomerId Id { get; set; }
+    public string Name { get; set; }
+
+    // Relaciones
+    public ICollection<Product> Products { get; set; }
+    public ICollection<Coupon> Coupons { get; set; }
 }
