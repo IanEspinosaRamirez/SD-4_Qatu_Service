@@ -3,6 +3,7 @@ using Application.Commands.User.Delete;
 using Application.Commands.User.GetById;
 using Application.Commands.User.Update;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Api.Controllers.v1;
@@ -34,6 +35,7 @@ public class UserController : ApiController {
   }
 
   [HttpGet("{id:guid}")]
+  [Authorize]
   public async Task<IActionResult> GetUserById(Guid id) {
     var getUserResult = await _mediator.Send(new GetByIdUserCommand(id));
 

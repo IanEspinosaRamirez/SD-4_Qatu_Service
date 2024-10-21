@@ -6,7 +6,7 @@ namespace Infrastructure.Persistence;
 public class BaseRepository<T> : IBaseRepository<T>
     where T : AggregateRoot
 {
-    private readonly ApplicationDbContext _context;
+    public readonly ApplicationDbContext _context;
 
     public BaseRepository(ApplicationDbContext context)
     {

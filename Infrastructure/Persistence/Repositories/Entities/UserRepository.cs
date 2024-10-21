@@ -1,10 +1,18 @@
 using Domain.Entities.Users;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories.Entities;
 
-public class UserRepository : BaseRepository<User>, IUserRepository {
-  public UserRepository(ApplicationDbContext context) : base(context) {}
+public class UserRepository : BaseRepository<User>, IUserRepository
+{
+    public UserRepository(ApplicationDbContext context) : base(context) { }
 
-  // Aquí puedes agregar métodos adicionales específicos de UserCustomer si es
-  // necesario
+    public async Task<User?>
+    GetUserByLoginIdentifierAsync(string loginIdentifier)
+    {
+        return await _context.Set<User>().FirstOrDefaultAsync(
+            user => user.Email == loginIdentifier ||
+                    user.Username == loginIdentifier ||
+                    user.Phone == loginIdentifier);
+    }
 }
