@@ -1,4 +1,3 @@
-
 using Web.Api.Middlewares;
 
 namespace Web.Api;
@@ -19,6 +18,8 @@ public static class DependencyInjection {
             .AllowAnyMethod();
       });
     });
+
+    services.AddJwtAuthentication(configuration);
 
     return services;
   }
