@@ -658,3 +658,6 @@ Web.Api/obj/
 **/obj/
 
 .vscode/
+
+# Migration files
+**/Infrastructure/Persistence/Migrations/*.cs
