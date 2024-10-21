@@ -10,11 +10,6 @@ public class HashedPassword : IHashedPassword {
   }
 
   public bool VerifyPassword(string password, string hashedPassword) {
-    if (!hashedPassword.StartsWith("$2a$") &&
-        !hashedPassword.StartsWith("$2b$") &&
-        !hashedPassword.StartsWith("$2y$")) {
-      throw new FormatException("Invalid hash format.");
-    }
 
     return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
   }
