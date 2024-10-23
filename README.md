@@ -1,93 +1,165 @@
-# qatu-service
+# Backend Application (ASP.NET Core 8)
 
+This is a backend application built using .NET 8, utilizing Entity Framework Core for database access, with an architecture structured around layers including Infrastructure, Domain, Application, and Web.Api.
 
+## Prerequisites
 
-## Getting started
+To run this project, ensure you have the following tools installed:
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+- **.NET 8 SDK**  
+   Install from: [https://dotnet.microsoft.com/download/dotnet/8.0](https://dotnet.microsoft.com/download/dotnet/8.0)
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+- **Entity Framework Core Tools**  
+   Install with the following command:
 
-## Add your files
+  ```bash
+  dotnet tool install --global dotnet-ef
+  ```
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+- **Database Provider**  
+   Ensure the database provider you are using (MySQL) is correctly set up in the connection string in your `appsettings.json`.
 
+## Getting Started
+
+### Clone the Repository
+
+Clone the project to your local machine using SSH:
+
+```bash
+git clone git@gitlab.com:jala-university1/cohort-1/oficial-es-desarrollo-de-software-4-iso-223.ga.t2.24.m2/secci-n-b/group-c/qatu-service.git
+
+cd qatu-service
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/jala-university1/cohort-1/oficial-es-desarrollo-de-software-4-iso-223.ga.t2.24.m2/secci-n-b/group-c/qatu-service.git
-git branch -M main
-git push -uf origin main
+
+Or using HTTPS:
+
+```bash
+git https://gitlab.com/jala-university1/cohort-1/oficial-es-desarrollo-de-software-4-iso-223.ga.t2.24.m2/secci-n-b/group-c/qatu-service.git
+
+cd qatu-service
 ```
 
-## Integrate with your tools
+### Setup Environment
 
-- [ ] [Set up project integrations](https://gitlab.com/jala-university1/cohort-1/oficial-es-desarrollo-de-software-4-iso-223.ga.t2.24.m2/secci-n-b/group-c/qatu-service/-/settings/integrations)
+Navigate to the Web.Api directory:
 
-## Collaborate with your team
+```bash
+cd Web.Api
+```
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+Install the required packages:
 
-## Test and Deploy
+```bash
+dotnet restore
+```
 
-Use the built-in continuous integration in GitLab.
+Configure the necessary environment variables or update the `appsettings.json` file with your database connection string.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+## DB Configuration
 
-***
+Ensure your `appsettings.json` file in the [Web.Api](Web.Api/appsettings.json) directory is configured correctly. Below is an example configuration:
 
-# Editing this README
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Port=3306;Database=qatu;Uid=[username];Pwd=[password];"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "Jwt": {
+    "Key": "1883d62ffed6f8c663d90d0f3579d4942c7f0ef8908c1c8a2ac33777dbe5732fe3294da1008d16c8f204b71988e2fe7481de14a2947999e8de954043c089234f44b1fecf3f793aa22eef1d53c24905aa03176326389d3200142a56ceb7704bdb5d445ebf5321cf5f0697e8f12801bd7face1ac63d511fa31db6a4bdea26791d4321ae344edbe028e1532ed91ba66882694b28d5d4978cb24950d29e35caa4d45b128c3202822cb41da3c94d12068e293285a3a74e71ac3d91da225feab4ac1da69504a7bfc6acc447f3a93e2d6def3807b3c826be223d44856a9c9b34eb92aa837698df0a9e27b232fcf91e615f3aeab2d164aa2ffd431b91407f4a14164bef8",
+    "Issuer": "Qatu",
+    "Audience": "SD4 - Finnisimo"
+  },
+  "AllowedHosts": "*"
+}
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### Install Entity Framework Core CLI
 
-## Suggestions for a good README
+You will need to install the `dotnet-ef` tool globally to manage migrations:
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+Install `dotnet-ef`:
 
-## Name
-Choose a self-explaining name for your project.
+```bash
+dotnet tool install --global dotnet-ef
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+Verify the installation:
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+```bash
+dotnet ef --version
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+### Install Entity Framework Core CLI
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+You will need to install the `dotnet-ef` tool globally to manage migrations:
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Install `dotnet-ef`:
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+```bash
+dotnet tool install --global dotnet-ef
+```
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Verify the installation:
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+```bash
+dotnet ef --version
+```
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+### Running the Application
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+To run the backend application, execute the following command from the Web.Api directory:
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+```bash
+dotnet run
+```
 
-## License
-For open source projects, say how it is licensed.
+This will start the application and make it available on `http://localhost:{PORT}`.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+## Running Migrations
+
+To set up your database and run migrations, follow these steps:
+
+1. **Navigate to the project root (or stay in the current directory):**
+
+   ```bash
+   cd qatu-service
+   ```
+
+2. **Add a migration:**
+
+   ```bash
+   dotnet ef migrations add initialMigration -p Infrastructure -s Web.Api -o Persistence/Migrations
+   ```
+
+3. **Apply the migration to your database:**
+   ```bash
+   dotnet ef database update -p Infrastructure -s Web.Api
+   ```
+
+## Additional Commands
+
+- **Build the application:**
+
+  ```bash
+  dotnet build
+  ```
+
+- **Run tests:** Ensure that all tests pass before pushing changes:
+  ```bash
+  dotnet test
+  ```
+
+## Project Structure
+
+The application follows a Hexagonal Architecture with the following layers:
+
+- **Web.Api**: The entry point for the application (controllers, endpoints).
+- **Application**: Contains the business logic (CQRS commands, handlers).
+- **Domain**: Core domain entities, aggregates, and domain services.
+- **Infrastructure**: Database, external services integration (repositories, Entity Framework, etc.).
