@@ -1,4 +1,5 @@
 using Application.Commands.Store.Create;
+using Application.Commands.Store.Delete;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,5 +26,14 @@ public class StoreController : ApiController
 
         return createStoreResult.Match(
             _ => StatusCode(201), errors => Problem(errors));
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteStore(Guid id)
+    {
+        var deleteStoreResult = await _mediator.Send(new DeleteStoreCommand(id));
+
+        return deleteStoreResult.Match(
+            _ => StatusCode(204), errors => Problem(errors));
     }
 }
