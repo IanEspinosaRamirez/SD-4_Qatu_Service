@@ -12,14 +12,14 @@ public class Store : AggregateRoot
     public Store() { }
 
     public Store(CustomerId id, string name, string description, string address,
-                 DateTime createdAt, DateTime updatedAt, CustomerId userId)
+                  CustomerId userId)
     {
         Id = id;
         Name = name;
         Description = description;
         Address = address;
-        CreatedAt = createdAt;
-        UpdatedAt = updatedAt;
+        CreatedAt = DateTime.Now;
+        UpdatedAt = null;
         UserId = userId;
     }
 
@@ -28,7 +28,7 @@ public class Store : AggregateRoot
     public string Description { get; set; }
     public string Address { get; set; }
     public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     // Clave foránea explícita
     public CustomerId UserId { get; set; }
