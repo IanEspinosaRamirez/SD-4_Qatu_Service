@@ -14,7 +14,7 @@ public class Product : AggregateRoot
     public Product() { }
 
     public Product(CustomerId id, string name, float price, string description,
-                   int stock, string brand, DateTime updatedAt,
+                   int stock, string brand,
                    CustomerId storeId, CustomerId categoryId)
     {
         Id = id;
@@ -24,7 +24,7 @@ public class Product : AggregateRoot
         Stock = stock;
         Brand = brand;
         CreatedAt = DateTime.Now;
-        UpdatedAt = updatedAt;
+        UpdatedAt = null;
         Status = StatusProduct.ACTIVE;
         StoreId = storeId;
         CategoryId = categoryId;
@@ -41,7 +41,7 @@ public class Product : AggregateRoot
     public int Stock { get; set; }
     public string Brand { get; set; }
     public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
     public StatusProduct Status { get; set; }
 
     // Claves foráneas
@@ -49,8 +49,8 @@ public class Product : AggregateRoot
     public CustomerId CategoryId { get; set; }
 
     // Propiedades de navegación
-    public required Store Store { get; set; }
-    public required Category Category { get; set; }
+    public Store Store { get; set; }
+    public Category Category { get; set; }
 
     // Relaciones
     public ICollection<ReviewProduct> ReviewProducts { get; set; }
