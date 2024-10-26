@@ -1,5 +1,4 @@
 using Application.Commands.Cart.Create;
-using Application.Commands.Cart.Delete;
 using Application.Commands.Cart.GetById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -31,13 +30,5 @@ public class CartController : ApiController
         var getCartResult = await _mediator.Send(new GetByIdCartCommand(id));
 
         return getCartResult.Match<IActionResult>(cart => Ok(cart), errors => Problem(errors));
-    }
-
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteCart([FromRoute] Guid id)
-    {
-        var deleteCartResult = await _mediator.Send(new DeleteCartCommand(id));
-
-        return deleteCartResult.Match(_ => StatusCode(204), errors => Problem(errors));
     }
 }
