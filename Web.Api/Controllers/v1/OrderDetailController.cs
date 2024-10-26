@@ -1,4 +1,5 @@
 using Application.Commands.OrderDetail.Create;
+using Application.Commands.OrderDetail.Delete;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,5 +24,15 @@ public class OrderDetailController : ApiController
 
         return createOrderDetailResult.Match(
             _ => StatusCode(201), errors => Problem(errors));
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteOrderDetail(Guid id)
+    {
+        var deleteOrderDetailResult =
+            await _mediator.Send(new DeleteOrderDetailCommand(id));
+
+        return deleteOrderDetailResult.Match(
+            _ => StatusCode(204), errors => Problem(errors));
     }
 }
