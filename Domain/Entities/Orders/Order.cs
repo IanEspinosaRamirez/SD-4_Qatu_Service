@@ -1,6 +1,6 @@
-using Domain.Primitives;
-using Domain.Entities.Users;
 using Domain.Entities.OrderDetails;
+using Domain.Entities.Users;
+using Domain.Primitives;
 
 namespace Domain.Entities.Orders;
 
@@ -8,14 +8,19 @@ public class Order : AggregateRoot
 {
     public Order() { }
 
-    public Order(CustomerId id, float totalPrice, string shippingMethod,
-                 string paymentMethod, DateTime orderDate, CustomerId userId)
+    public Order(
+        CustomerId id,
+        float totalPrice,
+        string shippingMethod,
+        string paymentMethod,
+        CustomerId userId
+    )
     {
         Id = id;
         TotalPrice = totalPrice;
         ShippingMethod = shippingMethod;
         PaymentMethod = paymentMethod;
-        OrderDate = orderDate;
+        OrderDate = DateTime.Now;
         UserId = userId;
     }
 
@@ -32,8 +37,5 @@ public class Order : AggregateRoot
     public User? User { get; set; }
 
     // Relaciones
-    public ICollection<OrderDetail> OrderDetails
-    {
-        get; set;
-    } = new List<OrderDetail>();
+    public ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 }
