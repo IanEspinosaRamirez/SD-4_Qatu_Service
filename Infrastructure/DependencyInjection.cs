@@ -34,8 +34,12 @@ public static class DependencyInjection {
           "JWT Key is not configured properly.");
     }
 
+    var key = configuration["Jwt:Key"];
+    var audience = configuration["Jwt:Audience"];
+    var issuer = configuration["Jwt:Issuer"];
+
     services.AddSingleton<IJwtTokenGenerator>(
-        provider => new JwtTokenGenerator(jwtKey));
+        new JwtTokenGenerator(key, audience, issuer));
 
     services.AddDbContext<ApplicationDbContext>(
         options => options.UseMySql(connectionString, serverVersion));
