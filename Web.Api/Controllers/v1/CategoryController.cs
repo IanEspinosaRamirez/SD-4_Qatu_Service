@@ -4,6 +4,7 @@ using Application.Commands.Category.Update;
 using Application.Commands.Category.GetById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Application.Commands.Categories.GetAll;
 
 namespace Web.Api.Controllers.v1;
 
@@ -50,5 +51,14 @@ public class CategoryController : ApiController {
 
     return deleteCategoryResult.Match(
         _ => StatusCode(204), errors => Problem(errors));
+  }
+
+  [HttpGet("/all")]
+  public async Task<IActionResult> GetAllCategories() {
+    var getAllCategoriesResult =
+        await _mediator.Send(new GetAllCategoriesQuery());
+
+    return getAllCategoriesResult.Match(categories => Ok(categories),
+                                        errors => Problem(errors));
   }
 }

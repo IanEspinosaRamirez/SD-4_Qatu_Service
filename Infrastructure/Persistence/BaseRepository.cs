@@ -60,4 +60,8 @@ public class BaseRepository<T> : IBaseRepository<T>
         .Take(pageSize)
         .ToListAsync();
   }
+
+  public async Task<List<T>> GetAll() {
+    return await _context.Set<T>().ToListAsync();
+  }
 }

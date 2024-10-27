@@ -42,7 +42,7 @@ public class UserController : ApiController {
         await _mediator.Send(new DeleteUserCommand(new CustomerId(userId)));
 
     return deleteUserResult.Match(
-        _ => NoContent(), errors => Problem(errors));
+        _ => StatusCode(204), errors => Problem(errors));
   }
 
   [HttpGet]
@@ -64,14 +64,13 @@ public class UserController : ApiController {
   [HttpPut]
   public async Task<IActionResult>
   UpdateUser([FromBody] UpdateUserCommand command) {
-
     var updateUserResult = await _mediator.Send(command);
 
     return updateUserResult.Match(
         _ => StatusCode(204), errors => Problem(errors));
   }
 
-  [HttpGet]
+  [HttpGet("paged")]
   public async Task<IActionResult> GetUsersPaged(int pageNumber = 1,
                                                  int pageSize = 10) {
     var getPagedResult =
