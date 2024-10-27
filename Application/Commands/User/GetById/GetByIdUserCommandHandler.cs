@@ -28,7 +28,7 @@ internal sealed class GetByIdUserCommandHandler
       Phone = user.Phone,         Username = user.Username,
       Country = user.Country,     CreatedAt = user.CreatedAt,
       UpdatedAt = user.UpdatedAt, Address = user.Address,
-      ImageURL = user.ImageURL
+      ImageURL = user.ImageURL,   UserRole = user.RoleUser.ToString()
     };
 
     return userDto;

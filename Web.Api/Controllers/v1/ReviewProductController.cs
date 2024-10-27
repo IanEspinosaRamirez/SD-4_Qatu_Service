@@ -3,12 +3,12 @@ using Application.Commands.ReviewProduct.Delete;
 using Application.Commands.ReviewProduct.GetById;
 using Application.Commands.ReviewProduct.Update;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-
 public class ReviewProductController : ApiController {
   private readonly ISender _mediator;
 
@@ -17,6 +17,7 @@ public class ReviewProductController : ApiController {
   }
 
   [HttpPost]
+  [Authorize(Roles = "Client")]
   public async Task<IActionResult>
   CreateReviewProduct([FromBody] CreateReviewProductCommand command) {
     var createStoreResult = await _mediator.Send(command);
@@ -26,6 +27,7 @@ public class ReviewProductController : ApiController {
   }
 
   [HttpDelete("{id:guid}")]
+  [Authorize]
   public async Task<IActionResult> DeleteReviewProduct(Guid id) {
     var deleteStoreResult =
         await _mediator.Send(new DeleteReviewProductCommand(id));
@@ -35,6 +37,7 @@ public class ReviewProductController : ApiController {
   }
 
   [HttpGet("{id:guid}")]
+  [Authorize]
   public async Task<IActionResult> GetReviewProduct(Guid id) {
     var getStoreResult =
         await _mediator.Send(new GetByIdReviewProductCommand(id));
@@ -43,6 +46,7 @@ public class ReviewProductController : ApiController {
   }
 
   [HttpPut]
+  [Authorize(Roles = "Client")]
   public async Task<IActionResult>
   UpdateReviewProduct([FromBody] UpdateReviewProductCommand command) {
 
