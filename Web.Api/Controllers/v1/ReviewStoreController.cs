@@ -1,5 +1,5 @@
-
 using Application.Commands.ReviewStores.Create;
+using Application.Commands.ReviewStores.Delete;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Web.Api.Controllers;
@@ -20,5 +20,14 @@ public class ReviewStoreController : ApiController {
 
     return createStoreResult.Match(
         _ => StatusCode(201), errors => Problem(errors));
+  }
+
+  [HttpDelete("{id:guid}")]
+  public async Task<IActionResult> DeleteReviewStore(Guid id) {
+    var deleteStoreResult =
+        await _mediator.Send(new DeleteReviewStoreCommand(id));
+
+    return deleteStoreResult.Match(
+        _ => StatusCode(204), errors => Problem(errors));
   }
 }
