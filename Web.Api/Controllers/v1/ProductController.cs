@@ -1,6 +1,7 @@
 using Application.Commands.Product.Create;
 using Application.Commands.Product.Delete;
 using Application.Commands.Product.GetById;
+using Application.Commands.Product.GetPaged;
 using Application.Commands.Product.Update;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,14 @@ public class ProductController : ApiController
         var getProductResult = await _mediator.Send(new GetByIdProductCommand(id));
 
         return getProductResult.Match(product => Ok(product), errors => Problem(errors));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetProductsPaged(int pageNumber = 1, int pageSize = 10)
+    {
+        var getPagedResult = await _mediator.Send(new GetProductsPagedQuery(pageNumber, pageSize));
+
+        return getPagedResult.Match(products => Ok(products), errors => Problem(errors));
     }
 
     [HttpPut("{id:guid}")]
