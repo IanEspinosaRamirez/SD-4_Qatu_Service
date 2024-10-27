@@ -1,4 +1,5 @@
 using Application.Commands.ReviewStore.GetById;
+using Application.Commands.ReviewStore.Update;
 using Application.Commands.ReviewStores.Create;
 using Application.Commands.ReviewStores.Delete;
 using MediatR;
@@ -38,5 +39,15 @@ public class ReviewStoreController : ApiController {
         await _mediator.Send(new GetByIdReviewStoreCommand(id));
 
     return getStoreResult.Match(store => Ok(store), errors => Problem(errors));
+  }
+
+  [HttpPut]
+  public async Task<IActionResult>
+  UpdateReviewStore([FromBody] UpdateReviewStoreCommand command) {
+
+    var updateUserResult = await _mediator.Send(command);
+
+    return updateUserResult.Match(
+        _ => StatusCode(204), errors => Problem(errors));
   }
 }
