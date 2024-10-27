@@ -9,8 +9,14 @@ namespace Infrastructure.Persistence.Repositories.Authentication;
 
 public class JwtTokenGenerator : IJwtTokenGenerator {
   private readonly string _key;
+  private readonly string _audience;
+  private readonly string _issuer;
 
-  public JwtTokenGenerator(string key) { _key = key; }
+  public JwtTokenGenerator(string key, string audience, string issuer) {
+    _key = key;
+    _audience = audience;
+    _issuer = issuer;
+  }
 
   public string GenerateToken(User user, bool withoutExpiration = false) {
     var tokenHandler = new JwtSecurityTokenHandler();
@@ -22,6 +28,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
                   new Claim(ClaimTypes.Name, user.Username),
                   new Claim(ClaimTypes.Email, user.Email),
                   new Claim(ClaimTypes.Role, user.RoleUser.ToString()) }),
+      Audience = _audience, Issuer = _issuer,
       SigningCredentials = new SigningCredentials(
           new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
     };

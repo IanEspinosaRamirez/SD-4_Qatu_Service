@@ -1,8 +1,10 @@
+using System.Security.Claims;
 using Application.Commands.User.Create;
 using Application.Commands.User.Delete;
 using Application.Commands.User.GetById;
 using Application.Commands.User.GetPaged;
 using Application.Commands.User.Update;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,18 +29,33 @@ public class UserController : ApiController {
         _ => StatusCode(201), errors => Problem(errors));
   }
 
-  [HttpDelete("{id:guid}")]
-  public async Task<IActionResult> DeleteUser(Guid id) {
-    var deleteUserResult = await _mediator.Send(new DeleteUserCommand(id));
+  [HttpDelete]
+  [Authorize]
+  public async Task<IActionResult> DeleteUser() {
+    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    var match = System.Text.RegularExpressions.Regex.Match(userIdClaim,
+                                                           @"[0-9a-fA-F-]{36}");
+    var userId = Guid.Parse(match.Value);
+
+    var deleteUserResult =
+        await _mediator.Send(new DeleteUserCommand(new CustomerId(userId)));
 
     return deleteUserResult.Match(
-        _ => StatusCode(204), errors => Problem(errors));
+        _ => NoContent(), errors => Problem(errors));
   }
 
-  [HttpGet("{id:guid}")]
+  [HttpGet]
   [Authorize]
-  public async Task<IActionResult> GetUserById(Guid id) {
-    var getUserResult = await _mediator.Send(new GetByIdUserCommand(id));
+  public async Task<IActionResult> GetUserById() {
+    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    var match = System.Text.RegularExpressions.Regex.Match(userIdClaim,
+                                                           @"[0-9a-fA-F-]{36}");
+    var userId = Guid.Parse(match.Value);
+
+    var getUserResult =
+        await _mediator.Send(new GetByIdUserCommand(new CustomerId(userId)));
 
     return getUserResult.Match(userDto => Ok(userDto),
                                errors => Problem(errors));
