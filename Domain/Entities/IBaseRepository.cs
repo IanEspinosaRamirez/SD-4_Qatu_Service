@@ -9,4 +9,5 @@ public interface IBaseRepository<T>
   Task Update(T entity);
   Task UpdatePartial(T entity, params string[] updatedProperties);
   Task Delete(CustomerId id);
+  Task<List<T>> GetPaged(int pageNumber, int pageSize);
 }
