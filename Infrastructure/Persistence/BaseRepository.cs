@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Domain.Primitives;
 
 namespace Infrastructure.Persistence;
@@ -46,5 +47,17 @@ public class BaseRepository<T> : IBaseRepository<T>
 
   public async Task<T?> GetById(CustomerId id) {
     return await _context.Set<T>().FindAsync(id);
+  }
+
+  public async Task<List<T>> GetPaged(int pageNumber, int pageSize) {
+    if (pageNumber < 1)
+      throw new ArgumentOutOfRangeException(nameof(pageNumber));
+    if (pageSize < 1)
+      throw new ArgumentOutOfRangeException(nameof(pageSize));
+
+    return await _context.Set<T>()
+        .Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
   }
 }

@@ -1,6 +1,7 @@
 using Application.Commands.User.Create;
 using Application.Commands.User.Delete;
 using Application.Commands.User.GetById;
+using Application.Commands.User.GetPaged;
 using Application.Commands.User.Update;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -51,5 +52,14 @@ public class UserController : ApiController {
 
     return updateUserResult.Match(
         _ => StatusCode(204), errors => Problem(errors));
+  }
+
+  [HttpGet]
+  public async Task<IActionResult> GetUsersPaged(int pageNumber = 1,
+                                                 int pageSize = 10) {
+    var getPagedResult =
+        await _mediator.Send(new GetUsersPagedQuery(pageNumber, pageSize));
+
+    return getPagedResult.Match(users => Ok(users), errors => Problem(errors));
   }
 }
