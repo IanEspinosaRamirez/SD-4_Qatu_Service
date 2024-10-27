@@ -1,6 +1,7 @@
 using Application.Commands.CartItem.Create;
 using Application.Commands.CartItem.Delete;
 using Application.Commands.CartItem.GetById;
+using Application.Commands.CartItem.Update;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,5 +40,14 @@ public class CardItemController : ApiController {
 
     return getCartResult.Match<IActionResult>(cart => Ok(cart),
                                               errors => Problem(errors));
+  }
+
+  [HttpPut]
+  public async Task<IActionResult>
+  UpdateCartItem([FromBody] UpdateCartItemCommand command) {
+    var updateUserResult = await _mediator.Send(command);
+
+    return updateUserResult.Match(
+        _ => StatusCode(204), errors => Problem(errors));
   }
 }
