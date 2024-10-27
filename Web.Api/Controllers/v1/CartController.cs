@@ -1,10 +1,12 @@
 using Application.Commands.Cart.Create;
 using Application.Commands.Cart.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Api.Controllers.v1;
 
+[Authorize(Roles = "Client")]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class CartController : ApiController {

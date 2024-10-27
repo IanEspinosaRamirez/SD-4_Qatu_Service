@@ -3,10 +3,12 @@ using Application.Commands.CartItem.Delete;
 using Application.Commands.CartItem.GetById;
 using Application.Commands.CartItem.Update;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Api.Controllers.v1;
 
+[Authorize(Roles = "Client")]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class CardItemController : ApiController {

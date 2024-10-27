@@ -5,9 +5,11 @@ using Application.Commands.Category.GetById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Application.Commands.Categories.GetAll;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Api.Controllers.v1;
 
+[Authorize(Roles = "Administrator, Seller")]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class CategoryController : ApiController {

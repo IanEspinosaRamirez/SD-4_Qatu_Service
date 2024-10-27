@@ -62,6 +62,7 @@ public class UserController : ApiController {
   }
 
   [HttpPut]
+  [Authorize]
   public async Task<IActionResult>
   UpdateUser([FromBody] UpdateUserCommand command) {
     var updateUserResult = await _mediator.Send(command);
@@ -70,6 +71,7 @@ public class UserController : ApiController {
         _ => StatusCode(204), errors => Problem(errors));
   }
 
+  [Authorize(Roles = "Administrator")]
   [HttpGet("paged")]
   public async Task<IActionResult> GetUsersPaged(int pageNumber = 1,
                                                  int pageSize = 10) {

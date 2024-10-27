@@ -3,6 +3,7 @@ using Application.Commands.ReviewStore.Update;
 using Application.Commands.ReviewStores.Create;
 using Application.Commands.ReviewStores.Delete;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Api.Controllers;
 
@@ -16,6 +17,7 @@ public class ReviewStoreController : ApiController {
   }
 
   [HttpPost]
+  [Authorize(Roles = "Administrator, Seller")]
   public async Task<IActionResult>
   CreateReviewStore([FromBody] CreateReviewStoreCommand command) {
     var createStoreResult = await _mediator.Send(command);
@@ -25,6 +27,7 @@ public class ReviewStoreController : ApiController {
   }
 
   [HttpDelete("{id:guid}")]
+  [Authorize(Roles = "Administrator, Seller")]
   public async Task<IActionResult> DeleteReviewStore(Guid id) {
     var deleteStoreResult =
         await _mediator.Send(new DeleteReviewStoreCommand(id));
@@ -34,6 +37,7 @@ public class ReviewStoreController : ApiController {
   }
 
   [HttpGet("{id:guid}")]
+  [Authorize]
   public async Task<IActionResult> GetReviewStore(Guid id) {
     var getStoreResult =
         await _mediator.Send(new GetByIdReviewStoreCommand(id));
@@ -42,6 +46,7 @@ public class ReviewStoreController : ApiController {
   }
 
   [HttpPut]
+  [Authorize(Roles = "Administrator, Seller")]
   public async Task<IActionResult>
   UpdateReviewStore([FromBody] UpdateReviewStoreCommand command) {
 
