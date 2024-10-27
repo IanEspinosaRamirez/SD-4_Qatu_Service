@@ -1,6 +1,7 @@
 using Application.Commands.Store.Create;
 using Application.Commands.Store.Delete;
 using Application.Commands.Store.GetById;
+using Application.Commands.Store.GetPaged;
 using Application.Commands.Store.Update;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,6 @@ namespace Web.Api.Controllers.v1;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-
 public class StoreController : ApiController
 {
     private readonly ISender _mediator;
@@ -19,14 +19,12 @@ public class StoreController : ApiController
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
 
-
     [HttpPost]
     public async Task<IActionResult> CreateStore([FromBody] CreateStoreCommand command)
     {
         var createStoreResult = await _mediator.Send(command);
 
-        return createStoreResult.Match(
-            _ => StatusCode(201), errors => Problem(errors));
+        return createStoreResult.Match(_ => StatusCode(201), errors => Problem(errors));
     }
 
     [HttpGet("{id:guid}")]
@@ -34,19 +32,23 @@ public class StoreController : ApiController
     {
         var getStoreResult = await _mediator.Send(new GetByIdStoreCommand(id));
 
-        return getStoreResult.Match(
-            store => Ok(store), errors => Problem(errors));
+        return getStoreResult.Match(store => Ok(store), errors => Problem(errors));
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetStoresPaged(int pageNumber = 1, int pageSize = 10)
+    {
+        var getPagedResult = await _mediator.Send(new GetStoresPagedQuery(pageNumber, pageSize));
+
+        return getPagedResult.Match(stores => Ok(stores), errors => Problem(errors));
+    }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateStore(Guid id,
-                                                [FromBody] UpdateStoreCommand command)
+    public async Task<IActionResult> UpdateStore(Guid id, [FromBody] UpdateStoreCommand command)
     {
         var updateStoreResult = await _mediator.Send(command);
 
-        return updateStoreResult.Match(
-            _ => StatusCode(204), errors => Problem(errors));
+        return updateStoreResult.Match(_ => StatusCode(204), errors => Problem(errors));
     }
 
     [HttpDelete("{id:guid}")]
@@ -54,7 +56,6 @@ public class StoreController : ApiController
     {
         var deleteStoreResult = await _mediator.Send(new DeleteStoreCommand(id));
 
-        return deleteStoreResult.Match(
-            _ => StatusCode(204), errors => Problem(errors));
+        return deleteStoreResult.Match(_ => StatusCode(204), errors => Problem(errors));
     }
 }
