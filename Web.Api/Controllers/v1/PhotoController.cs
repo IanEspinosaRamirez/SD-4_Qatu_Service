@@ -1,4 +1,5 @@
 using Application.Commands.Photo.Create;
+using Application.Commands.Photo.Delete;
 using Application.Queries.Photo.GetPhotoUrl;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -32,5 +33,15 @@ public class PhotoController : ApiController
         var getPhotoResult = await _mediator.Send(new GetByIdPhotoQuery(id));
 
         return getPhotoResult.Match(photo => Ok(photo), errors => Problem(errors));
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeletePhoto([FromRoute] Guid photoId)
+    {
+        var command = new DeletePhotoCommand(photoId);
+        var result = await _mediator.Send(command);
+
+        return result.Match(
+            _ => NoContent(), errors => Problem(errors));
     }
 }
