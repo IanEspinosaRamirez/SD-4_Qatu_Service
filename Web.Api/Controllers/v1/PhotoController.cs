@@ -1,4 +1,5 @@
 using Application.Commands.Photo.Create;
+using Application.Queries.Photo.GetPhotoUrl;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,5 +24,13 @@ public class PhotoController : ApiController
 
         return createPhotoResult.Match(
             _ => StatusCode(201), errors => Problem(errors));
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetPhoto(Guid id)
+    {
+        var getPhotoResult = await _mediator.Send(new GetByIdPhotoQuery(id));
+
+        return getPhotoResult.Match(photo => Ok(photo), errors => Problem(errors));
     }
 }
