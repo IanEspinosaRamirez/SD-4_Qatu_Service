@@ -27,6 +27,6 @@ internal sealed class CreateOrderDetailCommandHandler
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        throw new NotImplementedException();
+        return Unit.Value;
     }
 }
