@@ -12,21 +12,26 @@ internal sealed class CreateOrderDetailCommandHandler
 
     public CreateOrderDetailCommandHandler(IUnitOfWork unitOfWork)
     {
-        _unitOfWork =
-            unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
     }
 
-    public async Task<ErrorOr<Unit>> Handle(CreateOrderDetailCommand command,
-                                            CancellationToken cancellationToken)
+    public async Task<ErrorOr<Unit>> Handle(
+        CreateOrderDetailCommand command,
+        CancellationToken cancellationToken
+    )
     {
         var orderDetail = new Domain.Entities.OrderDetails.OrderDetail(
-            new CustomerId(Guid.NewGuid()), command.Quantity, command.UnitPrice,
-            command.orderId, command.productId);
+            new CustomerId(Guid.NewGuid()),
+            command.Quantity,
+            command.UnitPrice,
+            command.orderId,
+            command.productId
+        );
 
         await _unitOfWork.OrderDetailRepository.Add(orderDetail);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        throw new NotImplementedException();
+        return Unit.Value;
     }
 }
