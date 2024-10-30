@@ -1,6 +1,7 @@
 using Application.Commands.Product.Create;
 using Application.Commands.Product.Delete;
 using Application.Commands.Product.GetById;
+using Application.Commands.Product.GetPaged;
 using Application.Commands.Product.Update;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -21,8 +22,7 @@ public class ProductController : ApiController
 
     [HttpPost]
     [Authorize(Roles = "Administrator, Seller")]
-    public async Task<IActionResult>
-    CreateProduct([FromBody] CreateProductCommand command)
+    public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand command)
     {
         var createProductResult = await _mediator.Send(command);
 
@@ -36,14 +36,21 @@ public class ProductController : ApiController
     {
         var getProductResult = await _mediator.Send(new GetByIdProductCommand(id));
 
-        return getProductResult.Match(product => Ok(product),
-                                      errors => Problem(errors));
+        return getProductResult.Match(product => Ok(product), errors => Problem(errors));
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> GetProductsPaged(int pageNumber = 1, int pageSize = 10)
+    {
+        var getPagedResult = await _mediator.Send(new GetProductsPagedQuery(pageNumber, pageSize));
+
+        return getPagedResult.Match(products => Ok(products), errors => Problem(errors));
     }
 
     [HttpPut("{id:guid}")]
     [Authorize(Roles = "Administrator, Seller")]
-    public async Task<IActionResult>
-    UpdateProduct(Guid id, [FromBody] UpdateProductCommand command)
+    public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] UpdateProductCommand command)
     {
         var updateProductResult = await _mediator.Send(command);
 
@@ -55,8 +62,7 @@ public class ProductController : ApiController
     [Authorize(Roles = "Administrator, Seller")]
     public async Task<IActionResult> DeleteProduct(Guid id)
     {
-        var deleteProductResult =
-            await _mediator.Send(new DeleteProductCommand(id));
+        var deleteProductResult = await _mediator.Send(new DeleteProductCommand(id));
 
         return deleteProductResult.Match(
             _ => StatusCode(204), errors => Problem(errors));
