@@ -1,5 +1,6 @@
 using Web.Api.Extensions;
 using Web.Api.Middlewares;
+using Google.Cloud.Storage.V1;
 
 namespace Web.Api;
 
@@ -11,6 +12,8 @@ public static class DependencyInjection {
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
     services.AddTransient<HandleErrors>();
+
+    services.AddSingleton(StorageClient.Create());
 
     services.AddCustomCors(configuration);
     services.AddJwtAuthentication(configuration);
