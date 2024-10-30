@@ -21,6 +21,7 @@ public class CategoryController : ApiController
     }
 
     [HttpPost]
+    [Authorize(Roles = "Administrator, Seller")]
     public async Task<IActionResult>
     CreateCategory([FromBody] CreateCategoryCommand command)
     {
@@ -62,7 +63,7 @@ public class CategoryController : ApiController
             _ => StatusCode(204), errors => Problem(errors));
     }
 
-    [HttpGet("/all")]
+    [HttpGet("all")]
     public async Task<IActionResult> GetAllCategories()
     {
         var getAllCategoriesResult =

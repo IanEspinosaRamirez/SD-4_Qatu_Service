@@ -20,6 +20,7 @@ public class StoreController : ApiController
     }
 
     [HttpPost]
+    [Authorize(Roles = "Administrator, Seller")]
     public async Task<IActionResult>
     CreateStore([FromBody] CreateStoreCommand command)
     {
