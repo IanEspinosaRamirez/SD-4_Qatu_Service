@@ -9,58 +9,66 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Api.Controllers.v1;
 
-[Authorize(Roles = "Administrator, Seller")]
 [ApiController]
 [Route("api/v1/[controller]")]
-public class CategoryController : ApiController {
-  private readonly ISender _mediator;
+public class CategoryController : ApiController
+{
+    private readonly ISender _mediator;
 
-  public CategoryController(ISender mediator) {
-    _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-  }
+    public CategoryController(ISender mediator)
+    {
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+    }
 
-  [HttpPost]
-  public async Task<IActionResult>
-  CreateCategory([FromBody] CreateCategoryCommand command) {
-    var createCategoryResult = await _mediator.Send(command);
+    [HttpPost]
+    public async Task<IActionResult>
+    CreateCategory([FromBody] CreateCategoryCommand command)
+    {
+        var createCategoryResult = await _mediator.Send(command);
 
-    return createCategoryResult.Match(
-        _ => StatusCode(201), errors => Problem(errors));
-  }
+        return createCategoryResult.Match(
+            _ => StatusCode(201), errors => Problem(errors));
+    }
 
-  [HttpPut]
-  public async Task<IActionResult>
-  UpdateCategory([FromBody] UpdateCategoryCommand command) {
-    var updateCategoryResult = await _mediator.Send(command);
+    [HttpPut]
+    [Authorize(Roles = "Administrator, Seller")]
+    public async Task<IActionResult>
+    UpdateCategory([FromBody] UpdateCategoryCommand command)
+    {
+        var updateCategoryResult = await _mediator.Send(command);
 
-    return updateCategoryResult.Match(
-        _ => StatusCode(204), errors => Problem(errors));
-  }
+        return updateCategoryResult.Match(
+            _ => StatusCode(204), errors => Problem(errors));
+    }
 
-  [HttpGet("{id:guid}")]
-  public async Task<IActionResult> GetCategoryById(Guid id) {
-    var getCategoryResult =
-        await _mediator.Send(new GetByIdCategoryCommand(id));
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetCategoryById(Guid id)
+    {
+        var getCategoryResult =
+            await _mediator.Send(new GetByIdCategoryCommand(id));
 
-    return getCategoryResult.Match(categoryDto => Ok(categoryDto),
-                                   errors => Problem(errors));
-  }
+        return getCategoryResult.Match(categoryDto => Ok(categoryDto),
+                                       errors => Problem(errors));
+    }
 
-  [HttpDelete("{id:guid}")]
-  public async Task<IActionResult> DeleteCategory(Guid id) {
-    var deleteCategoryResult =
-        await _mediator.Send(new DeleteCategoryCommand(id));
+    [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Administrator, Seller")]
+    public async Task<IActionResult> DeleteCategory(Guid id)
+    {
+        var deleteCategoryResult =
+            await _mediator.Send(new DeleteCategoryCommand(id));
 
-    return deleteCategoryResult.Match(
-        _ => StatusCode(204), errors => Problem(errors));
-  }
+        return deleteCategoryResult.Match(
+            _ => StatusCode(204), errors => Problem(errors));
+    }
 
-  [HttpGet("/all")]
-  public async Task<IActionResult> GetAllCategories() {
-    var getAllCategoriesResult =
-        await _mediator.Send(new GetAllCategoriesQuery());
+    [HttpGet("/all")]
+    public async Task<IActionResult> GetAllCategories()
+    {
+        var getAllCategoriesResult =
+            await _mediator.Send(new GetAllCategoriesQuery());
 
-    return getAllCategoriesResult.Match(categories => Ok(categories),
-                                        errors => Problem(errors));
-  }
+        return getAllCategoriesResult.Match(categories => Ok(categories),
+                                            errors => Problem(errors));
+    }
 }

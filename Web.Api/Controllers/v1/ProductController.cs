@@ -20,7 +20,6 @@ public class ProductController : ApiController
     }
 
     [HttpPost]
-    [Authorize(Roles = "Administrator, Seller")]
     public async Task<IActionResult>
     CreateProduct([FromBody] CreateProductCommand command)
     {
