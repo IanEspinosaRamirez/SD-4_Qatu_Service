@@ -1,5 +1,6 @@
 using Application.Commands.Photo.Create;
 using Application.Commands.Photo.Delete;
+using Application.Queries.Photo.GetPagedPhotos;
 using Application.Queries.Photo.GetPhotoUrl;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -38,5 +39,19 @@ public class PhotoController : ApiController {
 
     return result.Match(
         _ => NoContent(), errors => Problem(errors));
+  }
+
+  [HttpGet]
+  public async Task<IActionResult>
+  GetPhotosPaged(int pageNumber = 1, int pageSize = 10,
+                 string? filterField = null, string? filterValue = null,
+                 string? orderByField = null, bool ascending = true) {
+
+    var getPagedResult = await _mediator.Send(
+        new GetPhotosPagedQuery(pageNumber, pageSize, filterField, filterValue,
+                                orderByField, ascending));
+
+    return getPagedResult.Match(photos => Ok(photos),
+                                errors => Problem(errors));
   }
 }
