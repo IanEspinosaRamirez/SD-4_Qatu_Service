@@ -25,8 +25,9 @@ internal sealed class GetAllCategoriesQueryHandler
 
     var categoryDtos =
         categories
-            .Select(category =>
-                        new ResponseGetAllCategories { Name = category.Name })
+            .Select(category => new ResponseGetAllCategories {
+              Id = category.Id.Value.ToString(), Name = category.Name
+            })
             .ToList();
 
     return categoryDtos;

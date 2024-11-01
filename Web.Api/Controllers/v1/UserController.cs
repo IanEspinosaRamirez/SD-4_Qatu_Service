@@ -71,12 +71,14 @@ public class UserController : ApiController {
         _ => StatusCode(204), errors => Problem(errors));
   }
 
-  [Authorize(Roles = "Administrator")]
   [HttpGet("paged")]
-  public async Task<IActionResult> GetUsersPaged(int pageNumber = 1,
-                                                 int pageSize = 10) {
-    var getPagedResult =
-        await _mediator.Send(new GetUsersPagedQuery(pageNumber, pageSize));
+  public async Task<IActionResult>
+  GetUsersPaged(int pageNumber = 1, int pageSize = 10,
+                string? filterField = null, string? filterValue = null,
+                string? orderByField = null, bool ascending = true) {
+    var getPagedResult = await _mediator.Send(
+        new GetUsersPagedQuery(pageNumber, pageSize, filterField, filterValue,
+                               orderByField, ascending));
 
     return getPagedResult.Match(users => Ok(users), errors => Problem(errors));
   }
