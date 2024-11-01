@@ -1,6 +1,7 @@
 using Application.Commands.ReviewProduct.Create;
 using Application.Commands.ReviewProduct.Delete;
 using Application.Commands.ReviewProduct.GetById;
+using Application.Commands.ReviewProduct.GetPaged;
 using Application.Commands.ReviewProduct.Update;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -54,5 +55,19 @@ public class ReviewProductController : ApiController {
 
     return updateUserResult.Match(
         _ => StatusCode(204), errors => Problem(errors));
+  }
+
+  [HttpGet]
+  public async Task<IActionResult>
+  GetReviewProductsPaged(int pageNumber = 1, int pageSize = 10,
+                         string? filterField = null, string? filterValue = null,
+                         string? orderByField = null, bool ascending = true) {
+
+    var getPagedResult = await _mediator.Send(
+        new GetReviewProductsPagedQuery(pageNumber, pageSize, filterField,
+                                        filterValue, orderByField, ascending));
+
+    return getPagedResult.Match(reviewProducts => Ok(reviewProducts),
+                                errors => Problem(errors));
   }
 }

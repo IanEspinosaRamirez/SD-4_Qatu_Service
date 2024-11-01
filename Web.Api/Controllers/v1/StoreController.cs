@@ -11,60 +11,60 @@ namespace Web.Api.Controllers.v1;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class StoreController : ApiController
-{
-    private readonly ISender _mediator;
+public class StoreController : ApiController {
+  private readonly ISender _mediator;
 
-    public StoreController(ISender mediator)
-    {
-        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-    }
+  public StoreController(ISender mediator) {
+    _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+  }
 
-    [HttpPost]
-    [Authorize(Roles = "Administrator, Seller")]
-    public async Task<IActionResult> CreateStore([FromBody] CreateStoreCommand command)
-    {
-        var createStoreResult = await _mediator.Send(command);
+  [HttpPost]
+  public async Task<IActionResult>
+  CreateStore([FromBody] CreateStoreCommand command) {
+    var createStoreResult = await _mediator.Send(command);
 
-        return createStoreResult.Match(
-            _ => StatusCode(201), errors => Problem(errors));
-    }
+    return createStoreResult.Match(
+        _ => StatusCode(201), errors => Problem(errors));
+  }
 
-    [HttpGet("{id:guid}")]
-    [Authorize]
-    public async Task<IActionResult> GetStore(Guid id)
-    {
-        var getStoreResult = await _mediator.Send(new GetByIdStoreCommand(id));
+  [HttpGet("{id:guid}")]
+  [Authorize]
+  public async Task<IActionResult> GetStore(Guid id) {
+    var getStoreResult = await _mediator.Send(new GetByIdStoreCommand(id));
 
-        return getStoreResult.Match(store => Ok(store), errors => Problem(errors));
-    }
+    return getStoreResult.Match(store => Ok(store), errors => Problem(errors));
+  }
 
-    [HttpGet]
-    [Authorize]
-    public async Task<IActionResult> GetStoresPaged(int pageNumber = 1, int pageSize = 10)
-    {
-        var getPagedResult = await _mediator.Send(new GetStoresPagedQuery(pageNumber, pageSize));
+  [HttpGet]
+  public async Task<IActionResult>
+  GetStoresPaged(int pageNumber = 1, int pageSize = 10,
+                 string? filterField = null, string? filterValue = null,
+                 string? orderByField = null, bool ascending = true) {
 
-        return getPagedResult.Match(stores => Ok(stores), errors => Problem(errors));
-    }
+    var getPagedResult = await _mediator.Send(
+        new GetStoresPagedQuery(pageNumber, pageSize, filterField, filterValue,
+                                orderByField, ascending));
 
-    [HttpPut("{id:guid}")]
-    [Authorize(Roles = "Administrator, Seller")]
-    public async Task<IActionResult> UpdateStore(Guid id, [FromBody] UpdateStoreCommand command)
-    {
-        var updateStoreResult = await _mediator.Send(command);
+    return getPagedResult.Match(stores => Ok(stores),
+                                errors => Problem(errors));
+  }
 
-        return updateStoreResult.Match(
-            _ => StatusCode(204), errors => Problem(errors));
-    }
+  [HttpPut("{id:guid}")]
+  [Authorize(Roles = "Administrator, Seller")]
+  public async Task<IActionResult>
+  UpdateStore(Guid id, [FromBody] UpdateStoreCommand command) {
+    var updateStoreResult = await _mediator.Send(command);
 
-    [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Administrator, Seller")]
-    public async Task<IActionResult> DeleteStore(Guid id)
-    {
-        var deleteStoreResult = await _mediator.Send(new DeleteStoreCommand(id));
+    return updateStoreResult.Match(
+        _ => StatusCode(204), errors => Problem(errors));
+  }
 
-        return deleteStoreResult.Match(
-            _ => StatusCode(204), errors => Problem(errors));
-    }
+  [HttpDelete("{id:guid}")]
+  [Authorize(Roles = "Administrator, Seller")]
+  public async Task<IActionResult> DeleteStore(Guid id) {
+    var deleteStoreResult = await _mediator.Send(new DeleteStoreCommand(id));
+
+    return deleteStoreResult.Match(
+        _ => StatusCode(204), errors => Problem(errors));
+  }
 }

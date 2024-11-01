@@ -1,6 +1,7 @@
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Domain.Primitives;
+using System.Linq.Expressions;
 
 namespace Infrastructure.Persistence;
 
@@ -49,18 +50,36 @@ public class BaseRepository<T> : IBaseRepository<T>
     return await _context.Set<T>().FindAsync(id);
   }
 
-  public async Task<List<T>> GetPaged(int pageNumber, int pageSize) {
-    if (pageNumber < 1)
-      throw new ArgumentOutOfRangeException(nameof(pageNumber));
-    if (pageSize < 1)
-      throw new ArgumentOutOfRangeException(nameof(pageSize));
+  public async Task<List<T>>
+  GetPaged(int pageNumber, int pageSize, string? filterField = null,
+           string? filterValue = null,
+           Expression<Func<T, object>>? orderBy = null, bool ascending = true) {
+    IQueryable<T> query = _context.Set<T>();
 
-    return await _context.Set<T>()
-        .Skip((pageNumber - 1) * pageSize)
+    if (!string.IsNullOrEmpty(filterField) &&
+        !string.IsNullOrEmpty(filterValue)) {
+      var parameter = Expression.Parameter(typeof(T), "x");
+      var property = Expression.Property(parameter, filterField);
+      var constant = Expression.Constant(filterValue);
+      var containsMethod =
+          typeof(string).GetMethod("Contains", new[] { typeof(string) });
+      var containsExpression =
+          Expression.Call(property, containsMethod!, constant);
+      var lambda =
+          Expression.Lambda<Func<T, bool>>(containsExpression, parameter);
+
+      query = query.Where(lambda);
+    }
+
+    if (orderBy != null) {
+      query =
+          ascending ? query.OrderBy(orderBy) : query.OrderByDescending(orderBy);
+    }
+
+    return await query.Skip((pageNumber - 1) * pageSize)
         .Take(pageSize)
         .ToListAsync();
   }
-
   public async Task<List<T>> GetAll() {
     return await _context.Set<T>().ToListAsync();
   }

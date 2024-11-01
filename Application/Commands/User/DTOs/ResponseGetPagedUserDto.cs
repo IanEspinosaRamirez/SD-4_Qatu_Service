@@ -3,6 +3,7 @@ using Domain.Entities.Users.Enums;
 namespace Application.Commands.User.DTOs;
 
 public class ResponseGetPagedUserDto {
+  public required string Id { get; set; }
   public required string FullName { get; set; }
   public required string Email { get; set; }
   public string? Phone { get; set; }

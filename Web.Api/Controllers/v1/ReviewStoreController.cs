@@ -1,4 +1,5 @@
 using Application.Commands.ReviewStore.GetById;
+using Application.Commands.ReviewStore.GetPaged;
 using Application.Commands.ReviewStore.Update;
 using Application.Commands.ReviewStores.Create;
 using Application.Commands.ReviewStores.Delete;
@@ -54,5 +55,19 @@ public class ReviewStoreController : ApiController {
 
     return updateUserResult.Match(
         _ => StatusCode(204), errors => Problem(errors));
+  }
+
+  [HttpGet]
+  public async Task<IActionResult>
+  GetReviewStoresPaged(int pageNumber = 1, int pageSize = 10,
+                       string? filterField = null, string? filterValue = null,
+                       string? orderByField = null, bool ascending = true) {
+
+    var getPagedResult = await _mediator.Send(
+        new GetReviewStoresPagedQuery(pageNumber, pageSize, filterField,
+                                      filterValue, orderByField, ascending));
+
+    return getPagedResult.Match(reviewStores => Ok(reviewStores),
+                                errors => Problem(errors));
   }
 }
