@@ -56,7 +56,7 @@ public class CouponController : ApiController {
         _ => StatusCode(204), errors => Problem(errors));
   }
 
-  [Authorize(Roles = "Administrator")]
+  [Authorize(Roles = "Administrator, Seller")]
   [HttpGet("paged")]
   public async Task<IActionResult>
   GetCouponsPaged(int pageNumber = 1, int pageSize = 10,

@@ -20,6 +20,7 @@ public class OrderController : ApiController {
   }
 
   [HttpPost]
+  [Authorize]
   public async Task<IActionResult>
   CreateOrder([FromBody] CreateOrderCommand command) {
     var createOrderResult = await _mediator.Send(command);
@@ -29,6 +30,7 @@ public class OrderController : ApiController {
   }
 
   [HttpPut("{id:guid}")]
+  [Authorize]
   public async Task<IActionResult>
   UpdateOrder(Guid id, [FromBody] UpdateOrderCommand command) {
     var updateOrderResult = await _mediator.Send(command);
@@ -38,6 +40,7 @@ public class OrderController : ApiController {
   }
 
   [HttpGet("{id:guid}")]
+  [Authorize]
   public async Task<IActionResult> GetByIdOrder(Guid id) {
     var getOrderResult = await _mediator.Send(new GetByIdOrderCommand(id));
 
@@ -46,6 +49,7 @@ public class OrderController : ApiController {
   }
 
   [HttpDelete("{id:guid}")]
+  [Authorize]
   public async Task<IActionResult> DeleteOrder(Guid id) {
     var deleteOrderResult = await _mediator.Send(new DeleteOrderCommand(id));
 
@@ -54,6 +58,7 @@ public class OrderController : ApiController {
   }
 
   [HttpGet("paged")]
+  [Authorize]
   public async Task<IActionResult>
   GetPagedOrder(int pageNumber = 1, int pageSize = 10,
                 string? filterField = null, string? filterValue = null,
