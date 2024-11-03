@@ -23,11 +23,12 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
     var key = Encoding.ASCII.GetBytes(_key);
 
     var tokenDescriptor = new SecurityTokenDescriptor {
-      Subject = new ClaimsIdentity(
-          new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                  new Claim(ClaimTypes.Name, user.Username),
-                  new Claim(ClaimTypes.Email, user.Email),
-                  new Claim(ClaimTypes.Role, user.RoleUser.ToString()) }),
+      Subject = new ClaimsIdentity(new[] {
+        new Claim(ClaimTypes.NameIdentifier, user.Id.Value.ToString()),
+        new Claim(ClaimTypes.Name, user.Username),
+        new Claim(ClaimTypes.Email, user.Email),
+        new Claim(ClaimTypes.Role, user.RoleUser.ToString())
+      }),
       Audience = _audience, Issuer = _issuer,
       SigningCredentials = new SigningCredentials(
           new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

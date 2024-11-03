@@ -19,6 +19,7 @@ public class OrderDetailController : ApiController {
   }
 
   [HttpPost]
+  [Authorize]
   public async Task<IActionResult>
   CreateOrderDetail([FromBody] CreateOrderDetailCommand command) {
     var createOrderDetailResult = await _mediator.Send(command);
@@ -28,6 +29,7 @@ public class OrderDetailController : ApiController {
   }
 
   [HttpDelete("{id:guid}")]
+  [Authorize]
   public async Task<IActionResult> DeleteOrderDetail(Guid id) {
     var deleteOrderDetailResult =
         await _mediator.Send(new DeleteOrderDetailCommand(id));
@@ -37,6 +39,7 @@ public class OrderDetailController : ApiController {
   }
 
   [HttpGet("{id:guid}")]
+  [Authorize]
   public async Task<IActionResult> GetOrderDetail(Guid id) {
     var getStoreResult =
         await _mediator.Send(new GetByIdOrderDetailCommand(id));
@@ -45,6 +48,7 @@ public class OrderDetailController : ApiController {
   }
 
   [HttpGet("paged")]
+  [Authorize]
   public async Task<IActionResult>
   GetPagedOrderDetails(int pageNumber = 1, int pageSize = 10,
                        string? filterField = null, string? filterValue = null,

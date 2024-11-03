@@ -34,9 +34,9 @@ public class UserController : ApiController {
   public async Task<IActionResult> DeleteUser() {
     var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-    var match = System.Text.RegularExpressions.Regex.Match(userIdClaim,
-                                                           @"[0-9a-fA-F-]{36}");
-    var userId = Guid.Parse(match.Value);
+    if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId)) {
+      return BadRequest("Invalid user ID");
+    }
 
     var deleteUserResult =
         await _mediator.Send(new DeleteUserCommand(new CustomerId(userId)));
@@ -50,9 +50,11 @@ public class UserController : ApiController {
   public async Task<IActionResult> GetUserById() {
     var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-    var match = System.Text.RegularExpressions.Regex.Match(userIdClaim,
-                                                           @"[0-9a-fA-F-]{36}");
-    var userId = Guid.Parse(match.Value);
+    Console.WriteLine(userIdClaim);
+
+    if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId)) {
+      return BadRequest("Invalid user ID");
+    }
 
     var getUserResult =
         await _mediator.Send(new GetByIdUserCommand(new CustomerId(userId)));
@@ -72,6 +74,7 @@ public class UserController : ApiController {
   }
 
   [HttpGet("paged")]
+  [Authorize(Roles = "Administrator, Seller")]
   public async Task<IActionResult>
   GetUsersPaged(int pageNumber = 1, int pageSize = 10,
                 string? filterField = null, string? filterValue = null,

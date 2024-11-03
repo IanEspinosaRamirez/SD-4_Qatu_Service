@@ -18,10 +18,8 @@ public class AuthenticationController : ApiController {
     var loginResult = await _mediator.Send(command);
 
     return loginResult.Match(token => {
-      var cookieOptions =
-          new CookieOptions { HttpOnly = true, Secure = true,
-                              SameSite = SameSiteMode.Strict,
-                              Expires = DateTime.UtcNow.AddHours(24) };
+      var cookieOptions = new CookieOptions { HttpOnly = true, Secure = true,
+                                              SameSite = SameSiteMode.Strict };
 
       Response.Cookies.Append("AuthToken", token, cookieOptions);
 
@@ -29,8 +27,8 @@ public class AuthenticationController : ApiController {
     }, errors => Problem(errors));
   }
 
-  [Authorize]
   [HttpPost("logout")]
+  [Authorize]
   public IActionResult Logout() {
     Response.Cookies.Delete("AuthToken");
     return Ok(new { message = "Logout successful" });

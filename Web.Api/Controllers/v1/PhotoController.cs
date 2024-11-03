@@ -3,6 +3,7 @@ using Application.Commands.Photo.Delete;
 using Application.Queries.Photo.GetPagedPhotos;
 using Application.Queries.Photo.GetPhotoUrl;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Api.Controllers.v1;
@@ -17,6 +18,7 @@ public class PhotoController : ApiController {
   }
 
   [HttpPost]
+  [Authorize(Roles = "Administrator, Seller")]
   public async Task<IActionResult>
   CreatePhoto([FromBody] CreatePhotoCommand command) {
     var createPhotoResult = await _mediator.Send(command);
@@ -26,6 +28,7 @@ public class PhotoController : ApiController {
   }
 
   [HttpGet("{id:guid}")]
+  [Authorize(Roles = "Administrator, Seller")]
   public async Task<IActionResult> GetPhoto(Guid id) {
     var getPhotoResult = await _mediator.Send(new GetByIdPhotoQuery(id));
 
@@ -33,6 +36,7 @@ public class PhotoController : ApiController {
   }
 
   [HttpDelete("{id:guid}")]
+  [Authorize(Roles = "Administrator, Seller")]
   public async Task<IActionResult> DeletePhoto(Guid id) {
     var command = new DeletePhotoCommand(id);
     var result = await _mediator.Send(command);
@@ -42,6 +46,7 @@ public class PhotoController : ApiController {
   }
 
   [HttpGet]
+  [Authorize]
   public async Task<IActionResult>
   GetPhotosPaged(int pageNumber = 1, int pageSize = 10,
                  string? filterField = null, string? filterValue = null,

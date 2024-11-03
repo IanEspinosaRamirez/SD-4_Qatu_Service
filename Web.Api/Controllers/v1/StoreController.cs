@@ -19,6 +19,7 @@ public class StoreController : ApiController {
   }
 
   [HttpPost]
+  [Authorize(Roles = "Administrator, Seller")]
   public async Task<IActionResult>
   CreateStore([FromBody] CreateStoreCommand command) {
     var createStoreResult = await _mediator.Send(command);
@@ -36,6 +37,7 @@ public class StoreController : ApiController {
   }
 
   [HttpGet]
+  [Authorize]
   public async Task<IActionResult>
   GetStoresPaged(int pageNumber = 1, int pageSize = 10,
                  string? filterField = null, string? filterValue = null,

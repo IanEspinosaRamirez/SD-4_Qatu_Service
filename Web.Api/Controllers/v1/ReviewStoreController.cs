@@ -58,6 +58,7 @@ public class ReviewStoreController : ApiController {
   }
 
   [HttpGet]
+  [Authorize]
   public async Task<IActionResult>
   GetReviewStoresPaged(int pageNumber = 1, int pageSize = 10,
                        string? filterField = null, string? filterValue = null,

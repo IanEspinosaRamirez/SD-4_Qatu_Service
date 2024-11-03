@@ -1,6 +1,5 @@
 using Domain.Primitives;
 using Application.Data;
-
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +18,6 @@ public static class DependencyInjection {
                     IConfiguration configuration) {
     services.AddPersistence(configuration);
 
-    // Agregar configuración de EmailService
     services.Configure<EmailSettings>(
         configuration.GetSection("EmailSettings"));
     services.AddScoped<IEmailService, EmailService>();
@@ -34,9 +32,20 @@ public static class DependencyInjection {
         configuration.GetConnectionString("DefaultConnection");
     var serverVersion = new MySqlServerVersion(new Version(8, 0, 28));
 
-    services.AddSingleton<IJwtTokenGenerator>(new JwtTokenGenerator(
-        configuration["Jwt:Key"], configuration["Jwt:Audience"],
-        configuration["JwtIssuer"]));
+    var jwtSettings = configuration.GetSection("Jwt");
+    var jwtKey = jwtSettings.GetValue<string>("Key");
+
+    if (string.IsNullOrEmpty(jwtKey)) {
+      throw new InvalidOperationException(
+          "JWT Key is not configured properly.");
+    }
+
+    var key = configuration["Jwt:Key"];
+    var audience = configuration["Jwt:Audience"];
+    var issuer = configuration["Jwt:Issuer"];
+
+    services.AddSingleton<IJwtTokenGenerator>(
+        new JwtTokenGenerator(key, audience, issuer));
 
     services.AddDbContext<ApplicationDbContext>(
         options => options.UseMySql(connectionString, serverVersion));

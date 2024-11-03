@@ -19,6 +19,7 @@ public class CardItemController : ApiController {
   }
 
   [HttpPost]
+  [Authorize]
   public async Task<IActionResult>
   CreateCartItem([FromBody] CreateCartItemCommand command) {
     var createCartResult = await _mediator.Send(command);
@@ -28,6 +29,7 @@ public class CardItemController : ApiController {
   }
 
   [HttpDelete("{id:guid}")]
+  [Authorize]
   public async Task<IActionResult> DeleteCartItem(Guid id) {
     var deleteCategoryResult =
         await _mediator.Send(new DeleteCartItemCommand(id));
@@ -37,6 +39,7 @@ public class CardItemController : ApiController {
   }
 
   [HttpGet("{id:guid}")]
+  [Authorize]
   public async Task<IActionResult> GetByIdCartItem([FromRoute] Guid id) {
     var getCartResult = await _mediator.Send(new GetByIdCartItemCommand(id));
 
@@ -45,6 +48,7 @@ public class CardItemController : ApiController {
   }
 
   [HttpPut]
+  [Authorize]
   public async Task<IActionResult>
   UpdateCartItem([FromBody] UpdateCartItemCommand command) {
     var updateUserResult = await _mediator.Send(command);

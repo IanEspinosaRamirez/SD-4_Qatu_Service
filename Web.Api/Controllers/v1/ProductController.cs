@@ -38,6 +38,7 @@ public class ProductController : ApiController {
   }
 
   [HttpGet]
+  [Authorize]
   public async Task<IActionResult>
   GetProductsPaged(int pageNumber = 1, int pageSize = 10,
                    string? filterField = null, string? filterValue = null,

@@ -17,6 +17,7 @@ public class CartController : ApiController {
   }
 
   [HttpPost]
+  [Authorize]
   public async Task<IActionResult>
   CreateCart([FromBody] CreateCartCommand command) {
     var createCartResult = await _mediator.Send(command);
@@ -26,6 +27,7 @@ public class CartController : ApiController {
   }
 
   [HttpGet("{id:guid}")]
+  [Authorize]
   public async Task<IActionResult> GetByIdCart([FromRoute] Guid id) {
     var getCartResult = await _mediator.Send(new GetByIdCartCommand(id));
 
