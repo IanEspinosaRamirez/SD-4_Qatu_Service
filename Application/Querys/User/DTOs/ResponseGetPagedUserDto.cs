@@ -1,6 +1,6 @@
 using Domain.Entities.Users.Enums;
 
-namespace Application.Commands.User.DTOs;
+namespace Application.Querys.User.DTOs;
 
 public class ResponseGetPagedUserDto {
   public required string Id { get; set; }

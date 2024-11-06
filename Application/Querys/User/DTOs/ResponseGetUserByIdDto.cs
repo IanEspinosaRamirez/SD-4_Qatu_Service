@@ -1,4 +1,4 @@
-namespace Application.Commands.User.DTOs;
+namespace Application.Querys.User.DTOs;
 
 public class ResponseGetUserByIdDto {
   public required string FullName { get; set; }
