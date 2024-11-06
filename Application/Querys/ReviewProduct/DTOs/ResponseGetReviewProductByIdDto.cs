@@ -1,4 +1,4 @@
-namespace Application.Commands.ReviewProduct.DTOs;
+namespace Application.Querys.ReviewProduct.DTOs;
 
 public class ResponseGetReviewProductByIdDto {
   public required int Rating { get; set; }

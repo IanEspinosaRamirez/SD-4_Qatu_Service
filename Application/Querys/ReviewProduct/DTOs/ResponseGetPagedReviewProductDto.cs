@@ -1,4 +1,4 @@
-namespace Application.Commands.ReviewProduct.DTOs;
+namespace Application.Querys.ReviewProduct.DTOs;
 
 public class ResponseGetPagedReviewProductDto {
   public required string Id { get; set; }
