@@ -17,10 +17,10 @@ internal sealed class GetByIdReviewStoreQueryHandler
   }
 
   public async Task<ErrorOr<ResponseGetReviewStoreByIdDto>>
-  Handle(GetByIdReviewStoreQuery command, CancellationToken cancellationToken) {
+  Handle(GetByIdReviewStoreQuery query, CancellationToken cancellationToken) {
 
     var reviewStore = await _unitOfWork.ReviewStoreRepository.GetById(
-        new CustomerId(command.Id));
+        new CustomerId(query.Id));
 
     if (reviewStore is null) {
 

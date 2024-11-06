@@ -17,12 +17,11 @@ internal sealed class GetByIdReviewProductQueryHandler
   }
 
   public async Task<ErrorOr<ResponseGetReviewProductByIdDto>>
-  Handle(GetByIdReviewProductQuery command,
-         CancellationToken cancellationToken) {
+  Handle(GetByIdReviewProductQuery query, CancellationToken cancellationToken) {
 
     var reviewPReviewProduct =
         await _unitOfWork.ReviewProductRepository.GetById(
-            new CustomerId(command.Id));
+            new CustomerId(query.Id));
 
     if (reviewPReviewProduct is null) {
 

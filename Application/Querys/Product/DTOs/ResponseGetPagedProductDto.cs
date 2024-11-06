@@ -1,6 +1,6 @@
 using Domain.Entities;
 
-namespace Application.Commands.Product.DTOs;
+namespace Application.Querys.Product.DTOs;
 
 public class ResponseGetPagedProductDto {
   public required string Id { get; set; }
