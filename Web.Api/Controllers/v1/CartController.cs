@@ -1,5 +1,5 @@
 using Application.Commands.Cart.Create;
-using Application.Commands.Cart.GetById;
+using Application.Queries.Cart.GetById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +29,7 @@ public class CartController : ApiController {
   [HttpGet("{id:guid}")]
   [Authorize]
   public async Task<IActionResult> GetByIdCart([FromRoute] Guid id) {
-    var getCartResult = await _mediator.Send(new GetByIdCartCommand(id));
+    var getCartResult = await _mediator.Send(new GetByIdCartQuery(id));
 
     return getCartResult.Match<IActionResult>(cart => Ok(cart),
                                               errors => Problem(errors));

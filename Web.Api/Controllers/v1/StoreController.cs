@@ -1,7 +1,7 @@
 using Application.Commands.Store.Create;
 using Application.Commands.Store.Delete;
-using Application.Commands.Store.GetById;
-using Application.Commands.Store.GetPaged;
+using Application.Queries.Store.GetById;
+using Application.Queries.Store.GetPaged;
 using Application.Commands.Store.Update;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -31,7 +31,7 @@ public class StoreController : ApiController {
   [HttpGet("{id:guid}")]
   [Authorize]
   public async Task<IActionResult> GetStore(Guid id) {
-    var getStoreResult = await _mediator.Send(new GetByIdStoreCommand(id));
+    var getStoreResult = await _mediator.Send(new GetByIdStoreQuery(id));
 
     return getStoreResult.Match(store => Ok(store), errors => Problem(errors));
   }
@@ -51,7 +51,7 @@ public class StoreController : ApiController {
                                 errors => Problem(errors));
   }
 
-  [HttpPut("{id:guid}")]
+  [HttpPut]
   [Authorize(Roles = "Administrator, Seller")]
   public async Task<IActionResult>
   UpdateStore(Guid id, [FromBody] UpdateStoreCommand command) {

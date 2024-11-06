@@ -1,7 +1,7 @@
 using Application.Commands.Order.Create;
 using Application.Commands.Order.Delete;
-using Application.Commands.Order.GetById;
-using Application.Commands.Order.GetPaged;
+using Application.Queries.Order.GetById;
+using Application.Queries.Order.GetPaged;
 using Application.Commands.Order.Update;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -29,7 +29,7 @@ public class OrderController : ApiController {
         _ => StatusCode(201), errors => Problem(errors));
   }
 
-  [HttpPut("{id:guid}")]
+  [HttpPut]
   [Authorize]
   public async Task<IActionResult>
   UpdateOrder(Guid id, [FromBody] UpdateOrderCommand command) {
@@ -42,7 +42,7 @@ public class OrderController : ApiController {
   [HttpGet("{id:guid}")]
   [Authorize]
   public async Task<IActionResult> GetByIdOrder(Guid id) {
-    var getOrderResult = await _mediator.Send(new GetByIdOrderCommand(id));
+    var getOrderResult = await _mediator.Send(new GetByIdOrderQuery(id));
 
     return getOrderResult.Match<IActionResult>(order => Ok(order),
                                                errors => Problem(errors));

@@ -1,7 +1,7 @@
 using Application.Commands.Product.Create;
 using Application.Commands.Product.Delete;
-using Application.Commands.Product.GetById;
-using Application.Commands.Product.GetPaged;
+using Application.Queries.Product.GetById;
+using Application.Queries.Product.GetPaged;
 using Application.Commands.Product.Update;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -31,7 +31,7 @@ public class ProductController : ApiController {
   [HttpGet("{id:guid}")]
   [Authorize]
   public async Task<IActionResult> GetProduct(Guid id) {
-    var getProductResult = await _mediator.Send(new GetByIdProductCommand(id));
+    var getProductResult = await _mediator.Send(new GetByIdProductQuery(id));
 
     return getProductResult.Match(product => Ok(product),
                                   errors => Problem(errors));
@@ -52,7 +52,7 @@ public class ProductController : ApiController {
                                 errors => Problem(errors));
   }
 
-  [HttpPut("{id:guid}")]
+  [HttpPut]
   [Authorize(Roles = "Administrator, Seller")]
   public async Task<IActionResult>
   UpdateProduct(Guid id, [FromBody] UpdateProductCommand command) {
