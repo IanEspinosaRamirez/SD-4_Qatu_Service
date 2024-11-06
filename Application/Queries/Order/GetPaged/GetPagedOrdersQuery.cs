@@ -1,8 +1,8 @@
-using Application.Commands.Order.DTOs;
+using Application.Queries.Order.DTOs;
 using ErrorOr;
 using MediatR;
 
-namespace Application.Commands.Order.GetPaged;
+namespace Application.Queries.Order.GetPaged;
 
 public record
 GetPagedOrdersQuery(int PageNumber, int PageSize, string? FilterField = null,

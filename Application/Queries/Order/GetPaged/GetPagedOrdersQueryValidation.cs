@@ -1,8 +1,9 @@
 using FluentValidation;
 
-namespace Application.Commands.Order.GetPaged;
+namespace Application.Queries.Order.GetPaged;
 
-public class GetPagedOrdersQueryValidation : AbstractValidator<GetPagedOrdersQuery>
+public class GetPagedOrdersQueryValidation
+    : AbstractValidator<GetPagedOrdersQuery>
 {
     public GetPagedOrdersQueryValidation()
     {

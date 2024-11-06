@@ -1,6 +1,6 @@
 using Domain.Entities;
 
-namespace Application.Commands.Order.DTOs;
+namespace Application.Queries.Order.DTOs;
 
 public class ResponseGetPagedOrderDto
 {
