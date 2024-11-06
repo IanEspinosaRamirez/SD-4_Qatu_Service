@@ -1,10 +1,10 @@
-using Application.Commands.Store.DTOs;
+using Application.Querys.Store.DTOs;
 using Domain.Primitives;
 using ErrorOr;
 using MediatR;
 using System.Linq.Expressions;
 
-namespace Application.Commands.Store.GetPaged;
+namespace Application.Querys.Store.GetPaged;
 
 internal sealed class GetStoresPagedQueryHandler
     : IRequestHandler<GetStoresPagedQuery,

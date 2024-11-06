@@ -1,4 +1,4 @@
-namespace Application.Commands.Store.GetById;
+namespace Application.Querys.Store.GetById;
 
 public class ResponseGetStoreByIdDto
 {
@@ -6,5 +6,4 @@ public class ResponseGetStoreByIdDto
     public required string Description { get; set; }
     public required string Address { get; set; }
     public required DateTime CreatedAt { get; set; }
-
 }
