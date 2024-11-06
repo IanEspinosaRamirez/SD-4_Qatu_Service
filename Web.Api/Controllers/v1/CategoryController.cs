@@ -1,10 +1,10 @@
 using Application.Commands.Category.Create;
 using Application.Commands.Category.Delete;
 using Application.Commands.Category.Update;
-using Application.Commands.Category.GetById;
+using Application.Queries.Category.GetById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Application.Commands.Categories.GetAll;
+using Application.Queries.Categories.GetAll;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Api.Controllers.v1;
@@ -45,8 +45,7 @@ public class CategoryController : ApiController
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetCategoryById(Guid id)
     {
-        var getCategoryResult =
-            await _mediator.Send(new GetByIdCategoryCommand(id));
+        var getCategoryResult = await _mediator.Send(new GetByIdCategoryQuery(id));
 
         return getCategoryResult.Match(categoryDto => Ok(categoryDto),
                                        errors => Problem(errors));

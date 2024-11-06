@@ -10,53 +10,59 @@ namespace Web.Api.Controllers.v1;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class PhotoController : ApiController {
-  private readonly ISender _mediator;
+public class PhotoController : ApiController
+{
+    private readonly ISender _mediator;
 
-  public PhotoController(ISender mediator) {
-    _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-  }
+    public PhotoController(ISender mediator)
+    {
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+    }
 
-  [HttpPost]
-  [Authorize(Roles = "Administrator, Seller")]
-  public async Task<IActionResult>
-  CreatePhoto([FromBody] CreatePhotoCommand command) {
-    var createPhotoResult = await _mediator.Send(command);
+    [HttpPost]
+    [Authorize(Roles = "Administrator, Seller")]
+    public async Task<IActionResult>
+    CreatePhoto([FromBody] CreatePhotoCommand command)
+    {
+        var createPhotoResult = await _mediator.Send(command);
 
-    return createPhotoResult.Match(
-        _ => StatusCode(201), errors => Problem(errors));
-  }
+        return createPhotoResult.Match(
+            _ => StatusCode(201), errors => Problem(errors));
+    }
 
-  [HttpGet("{id:guid}")]
-  [Authorize(Roles = "Administrator, Seller")]
-  public async Task<IActionResult> GetPhoto(Guid id) {
-    var getPhotoResult = await _mediator.Send(new GetByIdPhotoQuery(id));
+    [HttpGet("{id:guid}")]
+    [Authorize(Roles = "Administrator, Seller")]
+    public async Task<IActionResult> GetPhoto(Guid id)
+    {
+        var getPhotoResult = await _mediator.Send(new GetByIdPhotoQuery(id));
 
-    return getPhotoResult.Match(photo => Ok(photo), errors => Problem(errors));
-  }
+        return getPhotoResult.Match(photo => Ok(photo), errors => Problem(errors));
+    }
 
-  [HttpDelete("{id:guid}")]
-  [Authorize(Roles = "Administrator, Seller")]
-  public async Task<IActionResult> DeletePhoto(Guid id) {
-    var command = new DeletePhotoCommand(id);
-    var result = await _mediator.Send(command);
+    [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Administrator, Seller")]
+    public async Task<IActionResult> DeletePhoto(Guid id)
+    {
+        var command = new DeletePhotoCommand(id);
+        var result = await _mediator.Send(command);
 
-    return result.Match(
-        _ => NoContent(), errors => Problem(errors));
-  }
+        return result.Match(
+            _ => NoContent(), errors => Problem(errors));
+    }
 
-  [HttpGet]
-  [Authorize]
-  public async Task<IActionResult>
-  GetPhotosPaged(int pageNumber = 1, int pageSize = 10,
-                 string? filterField = null, string? filterValue = null,
-                 string? orderByField = null, bool ascending = true) {
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult>
+    GetPhotosPaged(int pageNumber = 1, int pageSize = 10,
+                   string? filterField = null, string? filterValue = null,
+                   string? orderByField = null, bool ascending = true)
+    {
 
-    var getPagedResult = await _mediator.Send(
-        new GetPhotosPagedQuery(pageNumber, pageSize, filterField, filterValue,
-                                orderByField, ascending));
+        var getPagedResult = await _mediator.Send(
+            new GetPhotosPagedQuery(pageNumber, pageSize, filterField, filterValue,
+                                    orderByField, ascending));
 
-    return getPagedResult.Match(photos => Ok(photos),
-                                errors => Problem(errors));
-  }
+        return getPagedResult.Match(photos => Ok(photos),
+                                    errors => Problem(errors));
+    }
 }
