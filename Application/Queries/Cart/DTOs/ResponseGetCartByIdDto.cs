@@ -1,4 +1,4 @@
-namespace Application.Commands.Cart.Dto;
+namespace Application.Queries.Cart.Dto;
 
 public class ResponseGetCartByIdDto
 {
