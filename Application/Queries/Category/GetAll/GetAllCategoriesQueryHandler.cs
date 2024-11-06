@@ -16,7 +16,7 @@ internal sealed class GetAllCategoriesQueryHandler
   }
 
   public async Task<ErrorOr<List<ResponseGetAllCategories>>>
-  Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken) {
+  Handle(GetAllCategoriesQuery query, CancellationToken cancellationToken) {
     var categories = await _unitOfWork.CategoryRepository.GetAll();
 
     if (!categories.Any()) {

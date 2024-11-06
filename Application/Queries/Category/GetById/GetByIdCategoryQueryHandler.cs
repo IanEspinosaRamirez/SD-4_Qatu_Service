@@ -17,9 +17,9 @@ internal sealed class GetByIdCategoryQueryHandler
   }
 
   public async Task<ErrorOr<ResponseGetCategoryByIdDto>>
-  Handle(GetByIdCategoryQuery request, CancellationToken cancellationToken) {
-    var category = await _unitOfWork.CategoryRepository.GetById(
-        new CustomerId(request.Id));
+  Handle(GetByIdCategoryQuery query, CancellationToken cancellationToken) {
+    var category =
+        await _unitOfWork.CategoryRepository.GetById(new CustomerId(query.Id));
     if (category is null) {
       return Error.Failure("Category.NotFound", "Category not found.");
     }
