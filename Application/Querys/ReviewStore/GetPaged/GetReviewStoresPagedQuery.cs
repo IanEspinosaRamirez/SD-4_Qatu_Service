@@ -1,8 +1,8 @@
-using Application.Commands.ReviewStore.DTOs;
+using Application.Querys.ReviewStore.DTOs;
 using ErrorOr;
 using MediatR;
 
-namespace Application.Commands.ReviewStore.GetPaged;
+namespace Application.Querys.ReviewStore.GetPaged;
 
 public record GetReviewStoresPagedQuery(int PageNumber, int PageSize,
                                         string? FilterField = null,

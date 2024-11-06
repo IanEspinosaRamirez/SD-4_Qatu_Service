@@ -1,10 +1,10 @@
-using Application.Commands.ReviewStore.DTOs;
+using Application.Querys.ReviewStore.DTOs;
 using Domain.Primitives;
 using ErrorOr;
 using MediatR;
 using System.Linq.Expressions;
 
-namespace Application.Commands.ReviewStore.GetPaged;
+namespace Application.Querys.ReviewStore.GetPaged;
 
 internal sealed class GetReviewStoresPagedQueryHandler
     : IRequestHandler<GetReviewStoresPagedQuery,

@@ -1,4 +1,4 @@
-namespace Application.Commands.ReviewStore.DTOs;
+namespace Application.Querys.ReviewStore.DTOs;
 
 public class ResponseGetReviewStoreByIdDto {
   public required int Rating { get; set; }
