@@ -1,26 +1,25 @@
-using Application.Commands.OrderDetail.DTOs;
+using Application.Queries.OrderDetail.DTOs;
 using Domain.Entities;
 using Domain.Primitives;
 using ErrorOr;
 using MediatR;
 
-namespace Application.Commands.OrderDetail.GetById;
+namespace Application.Queries.OrderDetail.GetById;
 
-internal sealed class GetByIdOrderDetailCommandHandler
-    : IRequestHandler<GetByIdOrderDetailCommand,
+internal sealed class GetByIdOrderDetailQueryHandler
+    : IRequestHandler<GetByIdOrderDetailQuery,
                       ErrorOr<ResponseGetByIdOrderDetailDto>>
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public GetByIdOrderDetailCommandHandler(IUnitOfWork unitOfWork)
+    public GetByIdOrderDetailQueryHandler(IUnitOfWork unitOfWork)
     {
         _unitOfWork =
             unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
     }
 
     public async Task<ErrorOr<ResponseGetByIdOrderDetailDto>>
-    Handle(GetByIdOrderDetailCommand command,
-           CancellationToken cancellationToken)
+    Handle(GetByIdOrderDetailQuery command, CancellationToken cancellationToken)
     {
         var orderDetail = await _unitOfWork.OrderDetailRepository.GetById(
             new CustomerId(command.Id));

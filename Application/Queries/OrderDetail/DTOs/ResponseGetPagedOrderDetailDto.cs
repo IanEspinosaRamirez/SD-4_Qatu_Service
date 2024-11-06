@@ -1,4 +1,4 @@
-namespace Application.Commands.OrderDetail.DTOs;
+namespace Application.Queries.OrderDetail.DTOs;
 
 public class ResponseGetPagedOrderDetailDto
 {
