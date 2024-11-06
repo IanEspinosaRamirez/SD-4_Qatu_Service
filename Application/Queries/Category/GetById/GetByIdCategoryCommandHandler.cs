@@ -1,23 +1,23 @@
-using Application.Commands.Category.Dtos;
+using Application.Queries.Category.Dtos;
 using Domain.Entities;
 using Domain.Primitives;
 using ErrorOr;
 using MediatR;
 
-namespace Application.Commands.Category.GetById;
+namespace Application.Queries.Category.GetById;
 
-internal sealed class GetByIdCategoryCommandHandler
-    : IRequestHandler<GetByIdCategoryCommand,
+internal sealed class GetByIdCategoryQueryHandler
+    : IRequestHandler<GetByIdCategoryQuery,
                       ErrorOr<ResponseGetCategoryByIdDto>> {
   private readonly IUnitOfWork _unitOfWork;
 
-  public GetByIdCategoryCommandHandler(IUnitOfWork unitOfWork) {
+  public GetByIdCategoryQueryHandler(IUnitOfWork unitOfWork) {
     _unitOfWork =
         unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
   }
 
   public async Task<ErrorOr<ResponseGetCategoryByIdDto>>
-  Handle(GetByIdCategoryCommand request, CancellationToken cancellationToken) {
+  Handle(GetByIdCategoryQuery request, CancellationToken cancellationToken) {
     var category = await _unitOfWork.CategoryRepository.GetById(
         new CustomerId(request.Id));
     if (category is null) {

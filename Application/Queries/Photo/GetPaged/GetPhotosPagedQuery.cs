@@ -1,4 +1,4 @@
-using Application.Commands.Photo.DTOs;
+using Application.Queries.Photo.DTOs;
 using ErrorOr;
 using MediatR;
 

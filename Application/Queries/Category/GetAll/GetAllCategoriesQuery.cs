@@ -2,7 +2,7 @@ using Application.Queries.Categories.DTOs;
 using ErrorOr;
 using MediatR;
 
-namespace Application.Commands.Categories.GetAll;
+namespace Application.Queries.Categories.GetAll;
 
 public record GetAllCategoriesQuery()
     : IRequest<ErrorOr<List<ResponseGetAllCategories>>>;

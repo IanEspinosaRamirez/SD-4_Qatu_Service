@@ -3,7 +3,7 @@ using ErrorOr;
 using MediatR;
 using Domain.Primitives;
 
-namespace Application.Commands.Categories.GetAll;
+namespace Application.Queries.Categories.GetAll;
 
 internal sealed class GetAllCategoriesQueryHandler
     : IRequestHandler<GetAllCategoriesQuery,
