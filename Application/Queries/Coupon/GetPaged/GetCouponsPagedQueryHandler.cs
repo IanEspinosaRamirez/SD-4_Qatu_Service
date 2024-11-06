@@ -1,10 +1,10 @@
 using System.Linq.Expressions;
-using Application.Commands.Coupon.DTOs;
+using Application.Queries.Coupon.DTOs;
 using Domain.Primitives;
 using ErrorOr;
 using MediatR;
 
-namespace Application.Commands.Coupon.GetPaged;
+namespace Application.Queries.Coupon.GetPaged;
 
 internal sealed class GetCouponsPagedQueryHandler
     : IRequestHandler<GetCouponsPagedQuery,

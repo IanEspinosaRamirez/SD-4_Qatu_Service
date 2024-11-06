@@ -1,8 +1,8 @@
-using Application.Commands.Coupon.DTOs;
+using Application.Queries.Coupon.DTOs;
 using ErrorOr;
 using MediatR;
 
-namespace Application.Commands.Coupon.GetPaged;
+namespace Application.Queries.Coupon.GetPaged;
 
 public record
 GetCouponsPagedQuery(int PageNumber, int PageSize, string? FilterField = null,
