@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Api.Controllers;
 using System.Security.Claims;
+using Application.Commands.ReviewStores.Create.Dto;
 
 [ApiController]
 [Route("api/v1/[controller]")]

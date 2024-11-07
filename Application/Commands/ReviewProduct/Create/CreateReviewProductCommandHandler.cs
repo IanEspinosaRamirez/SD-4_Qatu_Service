@@ -6,31 +6,24 @@ using MediatR;
 namespace Application.Commands.ReviewProduct.Create;
 
 internal sealed class CreateReviewProductCommandHandler
-    : IRequestHandler<CreateReviewProductCommand, ErrorOr<Unit>>
-{
-    private readonly IUnitOfWork _unitOfWork;
+    : IRequestHandler<CreateReviewProductCommand, ErrorOr<Unit>> {
+  private readonly IUnitOfWork _unitOfWork;
 
-    public CreateReviewProductCommandHandler(IUnitOfWork unitOfWork)
-    {
-        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-    }
+  public CreateReviewProductCommandHandler(IUnitOfWork unitOfWork) {
+    _unitOfWork =
+        unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+  }
 
-    public async Task<ErrorOr<Unit>> Handle(
-        CreateReviewProductCommand command,
-        CancellationToken cancellationToken
-    )
-    {
-        var reviewProduct = new Domain.Entities.ReviewProducts.ReviewProduct(
-            new CustomerId(Guid.NewGuid()),
-            command.rating,
-            command.content,
-            command.userId,
-            command.productId
-        );
+  public async Task<ErrorOr<Unit>> Handle(CreateReviewProductCommand command,
+                                          CancellationToken cancellationToken) {
+    var reviewProduct = new Domain.Entities.ReviewProducts.ReviewProduct(
+        new CustomerId(Guid.NewGuid()), command.rating, command.content,
+        new CustomerId(Guid.Parse(command.userId)),
+        new CustomerId(Guid.Parse(command.productId)));
 
-        await _unitOfWork.ReviewProductRepository.Add(reviewProduct);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+    await _unitOfWork.ReviewProductRepository.Add(reviewProduct);
+    await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
-    }
+    return Unit.Value;
+  }
 }
