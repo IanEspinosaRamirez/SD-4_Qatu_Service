@@ -31,7 +31,7 @@ public class PhotoController : ApiController
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize(Roles = "Administrator, Seller")]
+    [Authorize]
     public async Task<IActionResult> GetPhoto(Guid id)
     {
         var getPhotoResult = await _mediator.Send(new GetByIdPhotoQuery(id));

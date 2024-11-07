@@ -8,6 +8,10 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Application.Commands.User.UpdateRole;
+using Domain.Entities.Users.Enums;
+using Application.Commands.User.UpdatePhoto.Dto;
+using Application.Commands.User.UpdatePhoto;
 
 namespace Web.Api.Controllers.v1;
 
@@ -37,7 +41,6 @@ public class UserController : ApiController
     public async Task<IActionResult> DeleteUser()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        Console.WriteLine(userIdClaim);
 
         var deleteUserResult = await _mediator.Send(
             new DeleteUserCommand(new CustomerId(Guid.Parse(userIdClaim!))));
@@ -52,15 +55,8 @@ public class UserController : ApiController
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        Console.WriteLine(userIdClaim);
-
-        if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
-        {
-            return BadRequest("Invalid user ID");
-        }
-
-        var getUserResult =
-            await _mediator.Send(new GetByIdUserQuery(new CustomerId(userId)));
+        var getUserResult = await _mediator.Send(
+            new GetByIdUserQuery(new CustomerId(Guid.Parse(userIdClaim!))));
 
         return getUserResult.Match(userDto => Ok(userDto),
                                    errors => Problem(errors));
@@ -78,7 +74,7 @@ public class UserController : ApiController
     }
 
     [HttpGet("paged")]
-    [Authorize(Roles = "Administrator, Seller")]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult>
     GetUsersPaged(int pageNumber = 1, int pageSize = 10,
                   string? filterField = null, string? filterValue = null,
@@ -89,5 +85,35 @@ public class UserController : ApiController
                                    orderByField, ascending));
 
         return getPagedResult.Match(users => Ok(users), errors => Problem(errors));
+    }
+
+    [HttpPatch("role")]
+    [Authorize(Roles = "Administrator")]
+    public async Task<IActionResult>
+    UpdateUserRole([FromBody] RequestUpdateRoleUserDto dto)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        var updateRoleCommand = new UpdateRoleUserCommand(
+            userIdClaim!, (UserRole)Enum.Parse(typeof(UserRole), dto.NewRol, true));
+        var updateRoleResult = await _mediator.Send(updateRoleCommand);
+
+        return updateRoleResult.Match(
+            _ => StatusCode(204), errors => Problem(errors));
+    }
+
+    [HttpPatch("photo")]
+    [Authorize]
+    public async Task<IActionResult>
+    UpdateUserPhoto([FromBody] RequestUpdatePhotoUserDto dto)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        var updatePhotoCommand =
+            new UpdatePhotoUserCommand(userIdClaim!, dto.LocalFilePath);
+        var updatePhotoResult = await _mediator.Send(updatePhotoCommand);
+
+        return updatePhotoResult.Match(
+            _ => StatusCode(204), errors => Problem(errors));
     }
 }

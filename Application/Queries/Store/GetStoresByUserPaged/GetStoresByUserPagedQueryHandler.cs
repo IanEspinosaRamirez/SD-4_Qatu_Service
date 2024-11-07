@@ -4,27 +4,26 @@ using ErrorOr;
 using MediatR;
 using System.Linq.Expressions;
 
-namespace Application.Queries.Store.GetPaged;
+namespace Application.Queries.Store.GetStoresByUserPaged;
 
-internal sealed class GetStoresPagedQueryHandler
-    : IRequestHandler<GetStoresPagedQuery,
+internal sealed class GetStoresByUserPagedQueryHandler
+    : IRequestHandler<GetStoresByUserPagedQuery,
                       ErrorOr<List<ResponseGetPagedStoreDto>>> {
-
   private readonly IUnitOfWork _unitOfWork;
 
-  public GetStoresPagedQueryHandler(IUnitOfWork unitOfWork) {
+  public GetStoresByUserPagedQueryHandler(IUnitOfWork unitOfWork) {
     _unitOfWork =
         unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
   }
 
   public async Task<ErrorOr<List<ResponseGetPagedStoreDto>>>
-  Handle(GetStoresPagedQuery query, CancellationToken cancellationToken) {
+  Handle(GetStoresByUserPagedQuery query, CancellationToken cancellationToken) {
     var orderByExpression =
         GetOrderByExpression<Domain.Entities.Stores.Store>(query.OrderByField);
 
-    var stores = await _unitOfWork.StoreRepository.GetPaged(
-        query.PageNumber, query.PageSize, query.FilterField, query.FilterValue,
-        orderByExpression, query.Ascending);
+    var stores = await _unitOfWork.StoreRepository.GetStoresByUserPaged(
+        query.UserId, query.PageNumber, query.PageSize, query.FilterField,
+        query.FilterValue, orderByExpression, query.Ascending);
 
     if (stores == null || !stores.Any()) {
       return Error.Failure("Store.NoRecords", "No stores found.");

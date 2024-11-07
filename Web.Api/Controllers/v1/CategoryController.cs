@@ -21,7 +21,7 @@ public class CategoryController : ApiController
     }
 
     [HttpPost]
-    [Authorize(Roles = "Administrator, Seller")]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult>
     CreateCategory([FromBody] CreateCategoryCommand command)
     {
@@ -32,7 +32,7 @@ public class CategoryController : ApiController
     }
 
     [HttpPut]
-    [Authorize(Roles = "Administrator, Seller")]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult>
     UpdateCategory([FromBody] UpdateCategoryCommand command)
     {
@@ -52,7 +52,7 @@ public class CategoryController : ApiController
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Administrator, Seller")]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> DeleteCategory(Guid id)
     {
         var deleteCategoryResult =

@@ -7,6 +7,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Api.Controllers;
+using Application.Commands.ReviewProduct.Create.Dto;
+using System.Security.Claims;
 
 [ApiController]
 [Route("api/v1/[controller]")]
@@ -22,8 +24,13 @@ public class ReviewProductController : ApiController
     [HttpPost]
     [Authorize(Roles = "Client")]
     public async Task<IActionResult>
-    CreateReviewProduct([FromBody] CreateReviewProductCommand command)
+    CreateReviewProduct([FromBody] RequestCreateReviewProductDto request)
     {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        var command = new CreateReviewProductCommand(
+            request.rating, request.content, userIdClaim!, request.productId);
+
         var createStoreResult = await _mediator.Send(command);
 
         return createStoreResult.Match(
@@ -31,7 +38,7 @@ public class ReviewProductController : ApiController
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> DeleteReviewProduct(Guid id)
     {
         var deleteStoreResult =
