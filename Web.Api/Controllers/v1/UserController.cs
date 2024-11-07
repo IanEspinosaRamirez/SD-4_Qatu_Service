@@ -8,6 +8,8 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Application.Commands.User.UpdateRole;
+using Domain.Entities.Users.Enums;
 
 namespace Web.Api.Controllers.v1;
 
@@ -74,5 +76,19 @@ public class UserController : ApiController {
                                orderByField, ascending));
 
     return getPagedResult.Match(users => Ok(users), errors => Problem(errors));
+  }
+
+  [HttpPatch("role")]
+  [Authorize(Roles = "Administrator")]
+  public async Task<IActionResult>
+  UpdateUserRole([FromBody] RequestUpdateRoleUserDto dto) {
+    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    var updateRoleCommand = new UpdateRoleUserCommand(
+        userIdClaim!, (UserRole)Enum.Parse(typeof(UserRole), dto.NewRol, true));
+    var updateRoleResult = await _mediator.Send(updateRoleCommand);
+
+    return updateRoleResult.Match(
+        _ => StatusCode(204), errors => Problem(errors));
   }
 }
