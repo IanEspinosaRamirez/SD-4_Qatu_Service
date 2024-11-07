@@ -1,6 +1,8 @@
 using Application.Commands.Photo.Create;
 using Application.Commands.Photo.Delete;
 using Application.Queries.Photo.GetPagedPhotos;
+using Application.Queries.Photo.GetPhotosByProductId;
+using Application.Queries.Photo.GetPhotosByStoreId;
 using Application.Queries.Photo.GetPhotoUrl;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -64,5 +66,25 @@ public class PhotoController : ApiController
 
         return getPagedResult.Match(photos => Ok(photos),
                                     errors => Problem(errors));
+    }
+
+    [HttpGet("by-product/{productId}")]
+    [Authorize]
+    public async Task<IActionResult> GetPhotosByProductId(string productId)
+    {
+        var query = new GetPhotosByProductIdQuery(productId);
+        var result = await _mediator.Send(query);
+
+        return result.Match(photos => Ok(photos), errors => Problem(errors));
+    }
+
+    [HttpGet("by-store/{storeId}")]
+    [Authorize]
+    public async Task<IActionResult> GetPhotosByStoreId(string storeId)
+    {
+        var query = new GetPhotosByStoreIdQuery(storeId);
+        var result = await _mediator.Send(query);
+
+        return result.Match(photos => Ok(photos), errors => Problem(errors));
     }
 }
