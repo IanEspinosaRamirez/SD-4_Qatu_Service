@@ -6,6 +6,8 @@ using Application.Commands.Order.Update;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Application.Commands.Order.Create.Dto;
 
 namespace Web.Api.Controllers.v1;
 
@@ -22,7 +24,13 @@ public class OrderController : ApiController {
   [HttpPost]
   [Authorize]
   public async Task<IActionResult>
-  CreateOrder([FromBody] CreateOrderCommand command) {
+  CreateOrder([FromBody] RequestCreateOrderDto request) {
+    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    var command =
+        new CreateOrderCommand(request.TotalPrice, request.ShippingMethod,
+                               request.PaymentMethod, userIdClaim!);
+
     var createOrderResult = await _mediator.Send(command);
 
     return createOrderResult.Match(
