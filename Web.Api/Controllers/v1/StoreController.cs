@@ -6,6 +6,8 @@ using Application.Commands.Store.Update;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Application.Commands.Store.Create.Dto;
+using System.Security.Claims;
 
 namespace Web.Api.Controllers.v1;
 
@@ -21,7 +23,12 @@ public class StoreController : ApiController {
   [HttpPost]
   [Authorize(Roles = "Administrator, Seller")]
   public async Task<IActionResult>
-  CreateStore([FromBody] CreateStoreCommand command) {
+  CreateStore([FromBody] RequestCreateStoreDto request) {
+    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    var command = new CreateStoreCommand(request.Name, request.Description,
+                                         request.Address, userIdClaim!);
+
     var createStoreResult = await _mediator.Send(command);
 
     return createStoreResult.Match(

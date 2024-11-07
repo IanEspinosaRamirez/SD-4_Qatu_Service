@@ -13,81 +13,66 @@ namespace Web.Api.Controllers.v1;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class UserController : ApiController
-{
-    private readonly ISender _mediator;
+public class UserController : ApiController {
+  private readonly ISender _mediator;
 
-    public UserController(ISender mediator)
-    {
-        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-    }
+  public UserController(ISender mediator) {
+    _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+  }
 
-    [HttpPost]
-    public async Task<IActionResult>
-    CreateUser([FromBody] CreateUserCommand command)
-    {
-        var createUserResult = await _mediator.Send(command);
+  [HttpPost]
+  public async Task<IActionResult>
+  CreateUser([FromBody] CreateUserCommand command) {
+    var createUserResult = await _mediator.Send(command);
 
-        return createUserResult.Match(
-            _ => StatusCode(201), errors => Problem(errors));
-    }
+    return createUserResult.Match(
+        _ => StatusCode(201), errors => Problem(errors));
+  }
 
-    [HttpDelete]
-    [Authorize]
-    public async Task<IActionResult> DeleteUser()
-    {
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        Console.WriteLine(userIdClaim);
+  [HttpDelete]
+  [Authorize]
+  public async Task<IActionResult> DeleteUser() {
+    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        var deleteUserResult = await _mediator.Send(
-            new DeleteUserCommand(new CustomerId(Guid.Parse(userIdClaim!))));
+    var deleteUserResult = await _mediator.Send(
+        new DeleteUserCommand(new CustomerId(Guid.Parse(userIdClaim!))));
 
-        return deleteUserResult.Match(
-            _ => StatusCode(204), errors => Problem(errors));
-    }
+    return deleteUserResult.Match(
+        _ => StatusCode(204), errors => Problem(errors));
+  }
 
-    [HttpGet]
-    [Authorize]
-    public async Task<IActionResult> GetUserById()
-    {
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+  [HttpGet]
+  [Authorize]
+  public async Task<IActionResult> GetUserById() {
+    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        Console.WriteLine(userIdClaim);
+    var getUserResult = await _mediator.Send(
+        new GetByIdUserQuery(new CustomerId(Guid.Parse(userIdClaim!))));
 
-        if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
-        {
-            return BadRequest("Invalid user ID");
-        }
+    return getUserResult.Match(userDto => Ok(userDto),
+                               errors => Problem(errors));
+  }
 
-        var getUserResult =
-            await _mediator.Send(new GetByIdUserQuery(new CustomerId(userId)));
+  [HttpPut]
+  [Authorize]
+  public async Task<IActionResult>
+  UpdateUser([FromBody] UpdateUserCommand command) {
+    var updateUserResult = await _mediator.Send(command);
 
-        return getUserResult.Match(userDto => Ok(userDto),
-                                   errors => Problem(errors));
-    }
+    return updateUserResult.Match(
+        _ => StatusCode(204), errors => Problem(errors));
+  }
 
-    [HttpPut]
-    [Authorize]
-    public async Task<IActionResult>
-    UpdateUser([FromBody] UpdateUserCommand command)
-    {
-        var updateUserResult = await _mediator.Send(command);
+  [HttpGet("paged")]
+  [Authorize(Roles = "Administrator, Seller")]
+  public async Task<IActionResult>
+  GetUsersPaged(int pageNumber = 1, int pageSize = 10,
+                string? filterField = null, string? filterValue = null,
+                string? orderByField = null, bool ascending = true) {
+    var getPagedResult = await _mediator.Send(
+        new GetUsersPagedQuery(pageNumber, pageSize, filterField, filterValue,
+                               orderByField, ascending));
 
-        return updateUserResult.Match(
-            _ => StatusCode(204), errors => Problem(errors));
-    }
-
-    [HttpGet("paged")]
-    [Authorize(Roles = "Administrator, Seller")]
-    public async Task<IActionResult>
-    GetUsersPaged(int pageNumber = 1, int pageSize = 10,
-                  string? filterField = null, string? filterValue = null,
-                  string? orderByField = null, bool ascending = true)
-    {
-        var getPagedResult = await _mediator.Send(
-            new GetUsersPagedQuery(pageNumber, pageSize, filterField, filterValue,
-                                   orderByField, ascending));
-
-        return getPagedResult.Match(users => Ok(users), errors => Problem(errors));
-    }
+    return getPagedResult.Match(users => Ok(users), errors => Problem(errors));
+  }
 }

@@ -1,9 +1,8 @@
-using Domain.Entities;
 using ErrorOr;
 using MediatR;
 
 namespace Application.Commands.ReviewStores.Create;
 
 public record CreateReviewStoreCommand(int rating, string content,
-                                       CustomerId userId, CustomerId storeId)
+                                       string userId, string storeId)
     : IRequest<ErrorOr<Unit>>;

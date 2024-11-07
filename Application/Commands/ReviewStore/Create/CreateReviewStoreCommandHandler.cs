@@ -19,7 +19,8 @@ internal sealed class CreateReviewStoreCommandHandler
 
     var reviewStore = new Domain.Entities.ReviewStores.ReviewStore(
         new CustomerId(Guid.NewGuid()), command.rating, command.content,
-        command.userId, command.storeId);
+        new CustomerId(Guid.Parse(command.userId)),
+        new CustomerId(Guid.Parse(command.storeId)));
 
     await _unitOfWork.ReviewStoreRepository.Add(reviewStore);
 
