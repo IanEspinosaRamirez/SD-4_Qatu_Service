@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Commands.Store.Create.Dto;
 using System.Security.Claims;
+using Application.Queries.Store.Dto;
+using Application.Queries.Store.GetStoresByUserPaged;
 
 namespace Web.Api.Controllers.v1;
 
@@ -75,5 +77,20 @@ public class StoreController : ApiController {
 
     return deleteStoreResult.Match(
         _ => StatusCode(204), errors => Problem(errors));
+  }
+
+  [HttpGet("user")]
+  [Authorize]
+  public async Task<IActionResult>
+  GetStoresByUserPaged([FromQuery] RequestGetStoresByUserPagedDto request) {
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    var getPagedByUserResult =
+        await _mediator.Send(new GetStoresByUserPagedQuery(
+            userId!, request.PageNumber, request.PageSize, request.FilterField,
+            request.FilterValue, request.OrderByField, request.Ascending));
+
+    return getPagedByUserResult.Match(stores => Ok(stores),
+                                      errors => Problem(errors));
   }
 }
