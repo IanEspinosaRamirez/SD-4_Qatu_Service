@@ -17,94 +17,103 @@ namespace Web.Api.Controllers.v1;
 
 [ApiController]
 [Route("api/v1/[controller]")]
-public class UserController : ApiController {
-  private readonly ISender _mediator;
+public class UserController : ApiController
+{
+    private readonly ISender _mediator;
 
-  public UserController(ISender mediator) {
-    _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-  }
+    public UserController(ISender mediator)
+    {
+        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+    }
 
-  [HttpPost]
-  public async Task<IActionResult>
-  CreateUser([FromBody] CreateUserCommand command) {
-    var createUserResult = await _mediator.Send(command);
+    [HttpPost]
+    public async Task<IActionResult>
+    CreateUser([FromBody] CreateUserCommand command)
+    {
+        var createUserResult = await _mediator.Send(command);
 
-    return createUserResult.Match(
-        _ => StatusCode(201), errors => Problem(errors));
-  }
+        return createUserResult.Match(
+            _ => StatusCode(201), errors => Problem(errors));
+    }
 
-  [HttpDelete]
-  [Authorize]
-  public async Task<IActionResult> DeleteUser() {
-    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    [HttpDelete]
+    [Authorize]
+    public async Task<IActionResult> DeleteUser()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-    var deleteUserResult = await _mediator.Send(
-        new DeleteUserCommand(new CustomerId(Guid.Parse(userIdClaim!))));
+        var deleteUserResult = await _mediator.Send(
+            new DeleteUserCommand(new CustomerId(Guid.Parse(userIdClaim!))));
 
-    return deleteUserResult.Match(
-        _ => StatusCode(204), errors => Problem(errors));
-  }
+        return deleteUserResult.Match(
+            _ => StatusCode(204), errors => Problem(errors));
+    }
 
-  [HttpGet]
-  [Authorize]
-  public async Task<IActionResult> GetUserById() {
-    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> GetUserById()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-    var getUserResult = await _mediator.Send(
-        new GetByIdUserQuery(new CustomerId(Guid.Parse(userIdClaim!))));
+        var getUserResult = await _mediator.Send(
+            new GetByIdUserQuery(new CustomerId(Guid.Parse(userIdClaim!))));
 
-    return getUserResult.Match(userDto => Ok(userDto),
-                               errors => Problem(errors));
-  }
+        return getUserResult.Match(userDto => Ok(userDto),
+                                   errors => Problem(errors));
+    }
 
-  [HttpPut]
-  [Authorize]
-  public async Task<IActionResult>
-  UpdateUser([FromBody] UpdateUserCommand command) {
-    var updateUserResult = await _mediator.Send(command);
+    [HttpPut]
+    [Authorize]
+    public async Task<IActionResult>
+    UpdateUser([FromBody] UpdateUserCommand command)
+    {
+        var updateUserResult = await _mediator.Send(command);
 
-    return updateUserResult.Match(
-        _ => StatusCode(204), errors => Problem(errors));
-  }
+        return updateUserResult.Match(
+            _ => StatusCode(204), errors => Problem(errors));
+    }
 
-  [HttpGet("paged")]
-  [Authorize(Roles = "Administrator, Seller")]
-  public async Task<IActionResult>
-  GetUsersPaged(int pageNumber = 1, int pageSize = 10,
-                string? filterField = null, string? filterValue = null,
-                string? orderByField = null, bool ascending = true) {
-    var getPagedResult = await _mediator.Send(
-        new GetUsersPagedQuery(pageNumber, pageSize, filterField, filterValue,
-                               orderByField, ascending));
+    [HttpGet("paged")]
+    [Authorize(Roles = "Administrator")]
+    public async Task<IActionResult>
+    GetUsersPaged(int pageNumber = 1, int pageSize = 10,
+                  string? filterField = null, string? filterValue = null,
+                  string? orderByField = null, bool ascending = true)
+    {
+        var getPagedResult = await _mediator.Send(
+            new GetUsersPagedQuery(pageNumber, pageSize, filterField, filterValue,
+                                   orderByField, ascending));
 
-    return getPagedResult.Match(users => Ok(users), errors => Problem(errors));
-  }
+        return getPagedResult.Match(users => Ok(users), errors => Problem(errors));
+    }
 
-  [HttpPatch("role")]
-  [Authorize(Roles = "Administrator")]
-  public async Task<IActionResult>
-  UpdateUserRole([FromBody] RequestUpdateRoleUserDto dto) {
-    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    [HttpPatch("role")]
+    [Authorize(Roles = "Administrator")]
+    public async Task<IActionResult>
+    UpdateUserRole([FromBody] RequestUpdateRoleUserDto dto)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-    var updateRoleCommand = new UpdateRoleUserCommand(
-        userIdClaim!, (UserRole)Enum.Parse(typeof(UserRole), dto.NewRol, true));
-    var updateRoleResult = await _mediator.Send(updateRoleCommand);
+        var updateRoleCommand = new UpdateRoleUserCommand(
+            userIdClaim!, (UserRole)Enum.Parse(typeof(UserRole), dto.NewRol, true));
+        var updateRoleResult = await _mediator.Send(updateRoleCommand);
 
-    return updateRoleResult.Match(
-        _ => StatusCode(204), errors => Problem(errors));
-  }
+        return updateRoleResult.Match(
+            _ => StatusCode(204), errors => Problem(errors));
+    }
 
-  [HttpPatch("photo")]
-  [Authorize]
-  public async Task<IActionResult>
-  UpdateUserPhoto([FromBody] RequestUpdatePhotoUserDto dto) {
-    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    [HttpPatch("photo")]
+    [Authorize]
+    public async Task<IActionResult>
+    UpdateUserPhoto([FromBody] RequestUpdatePhotoUserDto dto)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-    var updatePhotoCommand =
-        new UpdatePhotoUserCommand(userIdClaim!, dto.LocalFilePath);
-    var updatePhotoResult = await _mediator.Send(updatePhotoCommand);
+        var updatePhotoCommand =
+            new UpdatePhotoUserCommand(userIdClaim!, dto.LocalFilePath);
+        var updatePhotoResult = await _mediator.Send(updatePhotoCommand);
 
-    return updatePhotoResult.Match(
-        _ => StatusCode(204), errors => Problem(errors));
-  }
+        return updatePhotoResult.Match(
+            _ => StatusCode(204), errors => Problem(errors));
+    }
 }
