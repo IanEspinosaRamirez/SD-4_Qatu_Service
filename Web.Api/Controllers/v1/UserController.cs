@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Commands.User.UpdateRole;
 using Domain.Entities.Users.Enums;
+using Application.Commands.User.UpdatePhoto.Dto;
+using Application.Commands.User.UpdatePhoto;
 
 namespace Web.Api.Controllers.v1;
 
@@ -89,6 +91,20 @@ public class UserController : ApiController {
     var updateRoleResult = await _mediator.Send(updateRoleCommand);
 
     return updateRoleResult.Match(
+        _ => StatusCode(204), errors => Problem(errors));
+  }
+
+  [HttpPatch("photo")]
+  [Authorize]
+  public async Task<IActionResult>
+  UpdateUserPhoto([FromBody] RequestUpdatePhotoUserDto dto) {
+    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    var updatePhotoCommand =
+        new UpdatePhotoUserCommand(userIdClaim!, dto.LocalFilePath);
+    var updatePhotoResult = await _mediator.Send(updatePhotoCommand);
+
+    return updatePhotoResult.Match(
         _ => StatusCode(204), errors => Problem(errors));
   }
 }
