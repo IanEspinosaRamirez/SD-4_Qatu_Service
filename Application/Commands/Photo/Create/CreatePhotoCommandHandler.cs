@@ -32,7 +32,8 @@ internal sealed class CreatePhotoCommandHandler
 
     var photo = new Domain.Entities.Photos.Photo(
         id: new CustomerId(photoId), imageURL: imageUrl,
-        productId: command.ProductId, storeId: command.StoreId);
+        new CustomerId(Guid.Parse(command.ProductId!)),
+        new CustomerId(Guid.Parse(command.StoreId!)));
 
     await _unitOfWork.PhotoRepository.Add(photo);
     await _unitOfWork.SaveChangesAsync(cancellationToken);
