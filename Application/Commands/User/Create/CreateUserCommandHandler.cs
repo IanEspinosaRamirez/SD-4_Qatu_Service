@@ -28,12 +28,19 @@ internal sealed class CreateUserCommandHandler
                                           CancellationToken cancellationToken) {
     var hashedPassword = _passwordHasher.HashPassword(command.Password);
 
+    var userId = new CustomerId(Guid.NewGuid());
+
     var user = new Domain.Entities.Users.User(
-        new CustomerId(Guid.NewGuid()), command.FullName, command.Email,
-        command.Username, hashedPassword, command.Country, command.Address,
-        command.Phone, command.ImageURL);
+        userId, command.FullName, command.Email, command.Username,
+        hashedPassword, command.Country, command.Address, command.Phone,
+        command.ImageURL);
+
+    var cart =
+        new Domain.Entities.Carts.Cart(new CustomerId(Guid.NewGuid()), userId);
 
     await _unitOfWork.UserRepository.Add(user);
+    await _unitOfWork.CartRepository.Add(cart);
+
     await _unitOfWork.SaveChangesAsync(cancellationToken);
 
     var subject = "Welcome to Qatu!";

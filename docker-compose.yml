@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  backend:
+    build: .
+    ports:
+      - "5136:5136"
+      - "7016:7016"
+    depends_on:
+      - db
+    networks:
+      - back-end
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:7016;http://+:5136
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/localhost.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=finndavid1
+    volumes:
+      - ./certs/localhost.pfx:/app/localhost.pfx
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: qatu
+      MYSQL_USER: root
+      MYSQL_PASSWORD: Finndavid1
+      MYSQL_ROOT_PASSWORD: Finndavid1
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - back-end
+
+volumes:
+  db_data:
+
+networks:
+  back-end:
+    driver: bridge
+    name: qatu_network
+    driver_opts:
+      com.docker.network.bridge.enable_icc: "true"

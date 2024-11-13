@@ -33,7 +33,6 @@ public class PhotoController : ApiController
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize]
     public async Task<IActionResult> GetPhoto(Guid id)
     {
         var getPhotoResult = await _mediator.Send(new GetByIdPhotoQuery(id));
@@ -53,7 +52,6 @@ public class PhotoController : ApiController
     }
 
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult>
     GetPhotosPaged(int pageNumber = 1, int pageSize = 10,
                    string? filterField = null, string? filterValue = null,
@@ -69,7 +67,6 @@ public class PhotoController : ApiController
     }
 
     [HttpGet("by-product/{productId}")]
-    [Authorize]
     public async Task<IActionResult> GetPhotosByProductId(string productId)
     {
         var query = new GetPhotosByProductIdQuery(productId);
@@ -79,7 +76,6 @@ public class PhotoController : ApiController
     }
 
     [HttpGet("by-store/{storeId}")]
-    [Authorize]
     public async Task<IActionResult> GetPhotosByStoreId(string storeId)
     {
         var query = new GetPhotosByStoreIdQuery(storeId);
