@@ -662,5 +662,3 @@ Web.Api/obj/
 # Migration files
 **/Infrastructure/Persistence/Migrations/*.cs
 
-#Certificates
-Keys/*.json
